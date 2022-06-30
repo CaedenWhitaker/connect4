@@ -1,0 +1,4 @@
+.vscode
+.res
+pyinstaller
+__pycache__
