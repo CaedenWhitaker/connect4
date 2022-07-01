@@ -10,13 +10,14 @@ class MouseListener:
 		pygame.MOUSEWHEEL
 	]
 	def listen(events):
-		MouseListener.events = [
+		MouseListener.events = tuple(
 			event
 			for event in events
 			if event.type in MouseListener.mouseEventTypes
-		]
-		for listener in MouseListener.listeners:
-			listener.onClick()
+		)
+		if len(MouseListener.events) > 0:
+			for listener in MouseListener.listeners:
+				listener.onClick()
 
 	def __init__(self) -> None:
 		pass
