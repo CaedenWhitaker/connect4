@@ -7,8 +7,9 @@ class VisualElement:
 		self.scale = scale
 		self.refreshRate = refreshRate
 		self.clock = pygame.time.Clock()
+		self.size = (self.scale * self.canvasWidth, self.scale * self.canvasHeight)
 		self.surface: pygame.Surface = pygame.display.set_mode(
-			(self.scale * self.canvasWidth, self.scale * self.canvasHeight)
+			self.size
 		)
 
 	def render(self) -> None:
