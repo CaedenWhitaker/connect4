@@ -23,7 +23,7 @@ def main():
 	global mode
 	global popup
 	popup = tkinter.Tk()
-	mode = None
+	mode = 1
 
 	def p1vp2():
 		global mode
@@ -52,6 +52,7 @@ def main():
 	B2.pack()
 	B3 = tkinter.ttk.Button(popup, text="Computer 1 v. Computer 2", command=c1vc2)
 	B3.pack()
+	popup.eval('tk::PlaceWindow . center')
 	popup.mainloop()
 
 	player1 = AIPlayer() if mode == 3 else HumanPlayer()
