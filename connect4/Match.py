@@ -22,7 +22,7 @@ class Match(VisualElement):
 		"""
 		Match Constructor
 		The Match object is in charge of the graphics logic. It recieves info from the Board object.
-		
+
 		@param player1:      the Player object representing player 1
 		@param player2:      the Player object representing player 2
 		@param board:        the Board object in charge of the game logic
@@ -70,16 +70,14 @@ class Match(VisualElement):
 		self.renderBoard()
 		self.renderHeldPiece()
 		self.renderPotentialMove()
-		print("B", self.turn)
 		if self.board.over:
 				font = pygame.font.SysFont(None, 175)
-				if self.winning_player == True:
+				if self.winning_player == False:
 					text_obj = font.render("Player 1 Wins!", True, (255,0,0))
 					self.surface.blit(text_obj, (10,0))
-				if self.winning_player == False:
+				if self.winning_player == True:
 					text_obj = font.render("Player 2 Wins!", True, (0,0,255))
 					self.surface.blit(text_obj, (10,0))
-		print("A", self.turn)
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
 
