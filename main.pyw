@@ -1,3 +1,4 @@
+from numpy import mat
 from connect4.MouseListener import MouseListener
 from connect4.AIPlayer import AIPlayer
 from connect4.HumanPlayer import HumanPlayer
@@ -6,7 +7,7 @@ from connect4.Board import Board
 import pygame
 import ctypes
 import sys
-import tkinter
+import tk
 import tkinter.ttk
 
 
@@ -69,6 +70,10 @@ def main():
 			if not match.board.over:
 				match.doTurn()
 			match.render()
+			#winning banner
+			
+				
+			
 	pygame.quit()
 	sys.exit()
 

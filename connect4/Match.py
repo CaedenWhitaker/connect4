@@ -1,3 +1,4 @@
+from pickle import TRUE
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
@@ -18,6 +19,17 @@ class Match(VisualElement):
 	framerate = 60
 
 	def __init__(self, player1: Player, player2: Player, board: Board, canvasWidth=700, canvasHeight=700, scale=1.0):
+		"""
+		Match Constructor
+		The Match object is in charge of the graphics logic. It recieves info from the Board object.
+		
+		@param player1:      the Player object representing player 1
+		@param player2:      the Player object representing player 2
+		@param board:        the Board object in charge of the game logic
+		@param canvasWidth:  the width of the screen for the game
+		@param canvasHeight: the height of the screen for the game
+		@returns: None
+		"""
 		super().__init__(canvasWidth=canvasWidth, canvasHeight=canvasHeight, scale=scale)
 		self.turn = False
 		self.player1 = player1
@@ -27,6 +39,7 @@ class Match(VisualElement):
 		self.player2.setOrder(True)
 		self.player2.setTurn(self.turn)
 		self.board = board
+		self.winning_player = None
 		
 		self.moves = []
 		self.heldPiece = 0
@@ -44,7 +57,9 @@ class Match(VisualElement):
 			self.board.move(col, self.turn)
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
-				self.turn = None
+				if self.turn != None:
+					self.winning_player = not self.turn
+				self.turn = None#this messes with telling who won
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
 			
@@ -55,6 +70,16 @@ class Match(VisualElement):
 		self.renderBoard()
 		self.renderHeldPiece()
 		self.renderPotentialMove()
+		print("B", self.turn)
+		if self.board.over:
+				font = pygame.font.SysFont(None, 175)
+				if self.winning_player == True:
+					text_obj = font.render("Player 1 Wins!", True, (255,0,0))
+					self.surface.blit(text_obj, (10,0))
+				if self.winning_player == False:
+					text_obj = font.render("Player 2 Wins!", True, (0,0,255))
+					self.surface.blit(text_obj, (10,0))
+		print("A", self.turn)
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
 
