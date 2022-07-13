@@ -48,6 +48,9 @@ class Match(VisualElement):
 		self.pieceRadius = 0.8 * self.slotRadius
 
 	def doTurn(self):
+		"""
+		
+		"""
 		if self.turn:
 			col = self.player2.getNextMove(self.board)
 		else:

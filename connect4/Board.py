@@ -18,6 +18,7 @@ class Board:
 		@param col: the column the player wishes to try to play on
 		@param turn: the current player
 		@returns: True if the move was valid, False otherwise
+		@type: bool
 		"""
 		if self.colFull(col):
 			return False
@@ -30,6 +31,7 @@ class Board:
 		This method checks for a win and sets the `over` property to True if a win was detected.
 		@param turn: the current player
 		@returns: True is a win condition has been met, False otherwise
+		@type: bool
 		"""
 		self.over = self.checkWinAux(turn)
 		return self.over
@@ -39,6 +41,7 @@ class Board:
 		This method checks win conditions for vertical, horizontal, and both diagonals.
 		@param turn: the current player
 		@returns: True if any win condition is met, False otherwise
+		@type: bool
 		"""
 		for i in range(Board.rows):
 			for j in range(Board.cols - Board.goal + 1):
@@ -75,11 +78,15 @@ class Board:
 		This method checks to see if a given column is already full.
 		@param col: the column to check
 		@returns: True if the column is full, False if it is not.
+		@type: bool
 		"""
 		return Board.rows <= self.heights[col]
 	
 	def top(self, col: int) -> int:
 		"""
-		This method gets the top slot 
+		This method gets the top slot of a column
+		@param col: the column index
+		@returns: the height of the specified column
+		@type: int
 		"""
 		return self.heights[col]
