@@ -20,6 +20,7 @@ def main():
 	pygame.init()
 	temp_window = pygame.display.set_mode((400,400))
 
+
 	mc = MenuController()
 	mc.mainloop(temp_window)
 
