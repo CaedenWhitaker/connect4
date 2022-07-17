@@ -6,8 +6,7 @@ from connect4.Board import Board
 import pygame
 import ctypes
 import sys
-import tkinter
-import tkinter.ttk
+from connect4.MenuController import MenuController
 
 
 def main():
@@ -19,44 +18,15 @@ def main():
 		scale = 1.0
 
 	pygame.init()
+	temp_window = pygame.display.set_mode((400,400))
 
-	global mode
-	global popup
-	popup = tkinter.Tk()
-	mode = 1
 
-	def p1vp2():
-		global mode
-		global popup
-		mode = 1
-		popup.destroy()
+	mc = MenuController()
+	mc.mainloop(temp_window)
 
-	def p1vc1():
-		global mode
-		global popup
-		mode = 2
-		popup.destroy()
 
-	def c1vc2():
-		global mode
-		global popup
-		mode = 3
-		popup.destroy()
-
-	popup.wm_title("Connect 4")
-	label = tkinter.ttk.Label(popup, text="Welcome to the Connect 4 Simulator!", font=("Verdana", 10))
-	label.pack(side="top", fill="x", padx=15, pady=15)
-	B1 = tkinter.ttk.Button(popup, text="Player 1 v. Player 1", command=p1vp2)
-	B1.pack()
-	B2 = tkinter.ttk.Button(popup, text="Player 1 v. Computer 1", command=p1vc1)
-	B2.pack()
-	B3 = tkinter.ttk.Button(popup, text="Computer 1 v. Computer 2", command=c1vc2)
-	B3.pack()
-	popup.eval('tk::PlaceWindow . center')
-	popup.mainloop()
-
-	player1 = AIPlayer() if mode == 3 else HumanPlayer()
-	player2 = HumanPlayer() if mode == 1 else AIPlayer()
+	player1 = HumanPlayer() if mc.player1 == 0 else AIPlayer()
+	player2 = HumanPlayer() if mc.player2 == 0 else AIPlayer()
 
 	match = Match(player1, player2, Board(), scale=scale)
 
@@ -70,6 +40,10 @@ def main():
 			if not match.board.over:
 				match.doTurn()
 			match.render()
+			#winning banner
+			
+				
+			
 	pygame.quit()
 	sys.exit()
 
