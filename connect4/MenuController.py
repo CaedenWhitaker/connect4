@@ -6,8 +6,9 @@ import pygame_menu.events
 
 class MenuController:
 	
-	def __init__(self, size=(400,400)):
-		self.size = size
+	def __init__(self, scale, size=(700,700)):
+		self.scale = scale
+		self.size = tuple(scale * element for element in size)
 		self.player1 = 0
 		self.player2 = 0
 		self.loop = False

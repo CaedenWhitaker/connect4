@@ -18,10 +18,8 @@ def main():
 		scale = 1.0
 
 	pygame.init()
-	temp_window = pygame.display.set_mode((400,400))
-
-
-	mc = MenuController()
+	temp_window = pygame.display.set_mode((scale * 700,scale * 700))
+	mc = MenuController(scale)
 	mc.mainloop(temp_window)
 
 
@@ -40,8 +38,6 @@ def main():
 			if not match.board.over:
 				match.doTurn()
 			match.render()
-			#winning banner
-			
 				
 			
 	pygame.quit()
