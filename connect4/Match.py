@@ -1,4 +1,3 @@
-from pickle import TRUE
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
