@@ -30,7 +30,7 @@ class Board:
 		"""
 		This method checks for a win and sets the `over` property to True if a win was detected.
 		@param turn: the current player
-		@returns: True is a win condition has been met, False otherwise
+		@returns: True if a win condition has been met, False otherwise
 		@type: bool
 		"""
 		self.over = self.checkWinAux(turn)
