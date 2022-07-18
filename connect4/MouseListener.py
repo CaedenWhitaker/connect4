@@ -44,6 +44,9 @@ class MouseListener:
 		@type: None
 		"""
 		MouseListener.listeners.remove(self)
+	
+	def clear():
+		MouseListener.listeners.clear()
 
 	def onClick(self):
 		raise NotImplementedError

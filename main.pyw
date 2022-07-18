@@ -38,7 +38,6 @@ def main():
 			if not match.board.over:
 				match.doTurn()
 			match.render()
-				
 			
 	pygame.quit()
 	sys.exit()

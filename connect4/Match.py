@@ -1,6 +1,7 @@
 from multiprocessing import connection
 
 from matplotlib.pyplot import connect
+from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
@@ -69,6 +70,7 @@ class Match(VisualElement):
 				if self.turn != None:
 					self.winning_player = not self.turn
 				self.turn = None#this messes with telling who won
+				MouseListener.clear()
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
 			
