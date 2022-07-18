@@ -1,8 +1,14 @@
+from multiprocessing import connection
+
+from matplotlib.pyplot import connect
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
+from connect4.Constants import DATABASE_PATH
 import math
 import pygame
+import sqlite3
+import os
 
 
 class Match(VisualElement):
@@ -57,6 +63,7 @@ class Match(VisualElement):
 
 		if col is not None:
 			self.board.move(col, self.turn)
+			self.moves.append(col)
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
 				if self.turn != None:
@@ -65,6 +72,31 @@ class Match(VisualElement):
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
 			
+
+	def save(self):
+		# fileFound = os.path.isfile(DATABASE_PATH)
+		# if not fileFound and os.path.exists(DATABASE_PATH):
+		# 	return False
+		# try:
+		# 	connection = sqlite3.connect(DATABASE_PATH)
+		# except sqlite3.DatabaseError:
+		# 	pass
+		connection = sqlite3.connect(DATABASE_PATH)
+		cursor = connection.cursor()
+		cursor.execute("""
+		CREATE TABLE Matches(
+			id INTEGER PRIMARY KEY NOT NULL,
+			start TIME NOT NULL,
+			end TIME NOT NULL,
+			player1 char[3] NOT NULL,
+			player2 char[3] NOT NULL,
+			
+		)
+		""")
+
+		
+
+
 
 
 	def render(self):
