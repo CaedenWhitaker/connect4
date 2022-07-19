@@ -18,9 +18,9 @@ def main():
 		scale = 1.0
 
 	pygame.init()
-	temp_window = pygame.display.set_mode((400,400))
+	temp_window = pygame.display.set_mode((700,700))
 
-	mc = MenuController()
+	mc = MenuController(size=(700,700))
 	mc.mainloop(temp_window)
 
 
