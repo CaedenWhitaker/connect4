@@ -65,14 +65,14 @@ class Board:
 				if win:
 					return True
 		for i in range(Board.rows - Board.goal + 1):
-			for j in range(Board.rows - Board.goal + 1):
+			for j in range(Board.cols - Board.goal + 1):
 				win = True
 				for k in range(Board.goal):
 					win = win and self.state[i+k][j+k] == turn
 				if win:
 					return True
 		for i in range(Board.rows - Board.goal + 1):
-			for j in range(Board.goal, Board.rows):
+			for j in range(Board.goal-1, Board.cols):
 				win = True
 				for k in range(Board.goal):
 					win = win and self.state[i+k][j-k] == turn
