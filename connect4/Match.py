@@ -1,4 +1,3 @@
-import re
 from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
@@ -99,26 +98,30 @@ class Match(VisualElement):
 	
 	def renderInvalidPrompt(self):
 		x = MouseListener.getMousePosition()[0] // self.scale
+		y = MouseListener.getMousePosition()[1]
 		col = x // (2 * self.slotRadius)
-		center = self.slotToPos(Board.rows - 1, col)
-		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)
+		center = self.slotToPos(Board.rows, col)
+		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)#translate center to top corner
+		#top_corner = (top_corner[0] + 2, top_corner[1] - 3*self.slotRadius)
 		
-		padding = (self.slotRadius - self.pieceRadius)
+		
+		padding_x = (self.slotRadius - self.pieceRadius)
+		padding_y = self.slotRadius - (self.slotRadius//4) - 2
 		top_corner_scaled = VisualElement.rescale(top_corner, self.scale)
-		pygame.draw.rect(self.surface, (50,50,50), (top_corner_scaled[0] + padding,
-													top_corner_scaled[1] + padding,
+		pygame.draw.rect(self.surface, (50,50,50), (top_corner_scaled[0] + padding_x,
+													top_corner_scaled[1] + padding_y,
 													self.slotRadius*2,
 													self.slotRadius), 0, 12)
-		pygame.draw.rect(self.surface, self.colorMap[self.turn], (top_corner_scaled[0] + padding,
-																	top_corner_scaled[1] + padding,
+		pygame.draw.rect(self.surface, self.colorMap[self.turn], (top_corner_scaled[0] + padding_x,
+																	top_corner_scaled[1] + padding_y,
 																	self.slotRadius*2,
 																	self.slotRadius), 5, 12)
 		
 		size = self.font_small.size("Invalid")
 		text_pad_x = ((self.slotRadius*2) - size[0]) / 2
 		text_pad_y = (self.slotRadius - size[1]) / 2
-		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding + text_pad_x, 
-												top_corner_scaled[1] + padding + text_pad_y))
+		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding_x + text_pad_x, 
+												top_corner_scaled[1] + padding_y + text_pad_y))
 		
 
 	def renderBackground(self):
@@ -186,3 +189,16 @@ class Match(VisualElement):
 	
 	def xToCol(self, x: int):
 		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth + 1))
+	
+	def mainloop(self):
+		running = True
+		while running:
+			if pygame.event.peek(eventtype=pygame.QUIT):
+				running = False
+			else:
+				events = pygame.event.get()
+				MouseListener.listen(events)
+				if not self.board.over:
+					self.doTurn()
+				self.render()
+				#winning banner
