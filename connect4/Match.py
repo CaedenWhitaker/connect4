@@ -63,7 +63,8 @@ class Match(VisualElement):
 			col = self.player1.getNextMove(self.board)
 
 		if col is not None:
-			self.board.move(col, self.turn)
+			res = self.board.move(col, self.turn)
+			print(res)
 			self.moves.append(col)
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
@@ -180,4 +181,4 @@ class Match(VisualElement):
 			self.player1.setPotentialMove(self.potentialMove)
 	
 	def xToCol(self, x: int):
-		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth + 1))
+		return math.floor(self.board.cols * (x + self.slotRadius) / self.canvasWidth)
