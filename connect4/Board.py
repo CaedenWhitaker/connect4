@@ -31,11 +31,19 @@ class Board:
 		"""
 		This method checks for a win and sets the `over` property to True if a win was detected.
 		@param turn: the current player
-		@returns: True if a win condition has been met, False otherwise
-		@type: bool
+		@returns: True is a win condition has been met, False otherwise
 		"""
+		if self.checkFull():
+			self.over = True
+			return (self.over, None)
 		self.over = self.checkWinAux(turn)
-		return self.over
+		return (self.over, turn)
+	
+	def checkFull(self):
+		for col in self.heights:
+			if col < Board.rows:
+				return False
+		return True
 
 	def checkWinAux(self, turn: bool) -> bool:
 		"""
