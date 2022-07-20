@@ -16,14 +16,18 @@ class MenuController:
 		self.player2_name = "AAA"
 		self.loop = False
 		#local menu MUST be made before the main menu
+		self._make_replay_menu()
 		self._make_local_menu()
 		self._make_main_menu()
+
+		self.info_surf = pygame.Surface((400, 700))
+
 		
 	
 	def _make_main_menu(self):
 		self.main_menu = pygame_menu.Menu("Main Menu", *self.size)
 		self.main_menu.add.button("Local", action=self.open_local_menu)
-		self.main_menu.add.button("Replay", action= lambda: print("NYI"))
+		self.main_menu.add.button("Replay", action=self.open_replay_menu)
 		self.main_menu.add.button("Exit", action=pygame_menu.events.EXIT)
 
 	def _make_local_menu(self):
@@ -39,8 +43,16 @@ class MenuController:
 			widget.set_onmouseover(self.update_names)
 			widget.set_onmouseleave(self.update_names)
 
+	def load_database(self, db):
+		#do stuff
+		pass
 	
-	
+	def _make_replay_menu(self):
+
+		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False)
+		self.replay_menu.add.dropselect("Game:", [("Item" + str(x),) for x in range(10)], 0, onchange=lambda x: print(x))
+
+
 	def update_names(self):
 		if self.player1 == 0:
 			self.p1_name_widget.set_value(self.player1_name)
@@ -83,7 +95,22 @@ class MenuController:
 	
 	def open_local_menu(self):
 		self.main_menu._open(self.local_menu)
+
+	def open_replay_menu(self):
+		self.main_menu._open(self.replay_menu)
 	
+	def update_info(self, info:dict):
+		kPlayer1Type = "p1_type"
+		kPlayer2Type = "p2_type"
+		kPlayer1Name = "p1_name"
+		kPlayer2Name = "p2_name"
+		kGameDateStamp = "datestamp"
+		kNumberOfMoves = "num_moves"
+
+		
+
+
+
 	def close(self):
 		self.loop = False
 	
@@ -93,6 +120,8 @@ class MenuController:
 			if self.main_menu.is_enabled():
 				self.main_menu.draw(window)
 				self.main_menu.update(pygame.event.get())
+				if self.main_menu._current is self.replay_menu:
+					pass
 				pygame.display.update()
 			
 
