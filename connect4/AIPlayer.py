@@ -16,7 +16,7 @@ class AIPlayer(Player):
 		"""
 		This method decides what the next move is for the AI
 		@param state: the board for the current game
-		@returns: the olumn index to play on
+		@returns: the column index to play on
 		@type: int
 		"""
 		if random.random() <= 0.005:
