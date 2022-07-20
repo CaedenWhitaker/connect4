@@ -8,7 +8,7 @@ class Board:
 		Board constructor
 		"""
 		self.state = [[None]*Board.cols for row in range(Board.rows)]
-		self.heights = [0 for col in range(Board.cols)]
+		self.heights = [0 for _ in range(Board.cols)]
 		self.over = False
 
 	def move(self, col: int, turn: bool) -> bool:
@@ -21,6 +21,7 @@ class Board:
 		@type: bool
 		"""
 		if self.colFull(col):
+			print(f"col: {col} is full")
 			return False
 		self.state[self.heights[col]][col] = turn
 		self.heights[col] += 1

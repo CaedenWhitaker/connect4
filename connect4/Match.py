@@ -70,8 +70,7 @@ class Match(VisualElement):
 			col = self.player1.getNextMove(self.board)
 		
 		if col is not None:
-			is_valid = self.board.move(col, self.turn)
-			#if above returns false, invalid move
+			self.board.move(col, self.turn)
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
 				if self.turn != None:
