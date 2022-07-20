@@ -4,21 +4,22 @@ class Board:
 	goal = 4
 
 	def __init__(self) -> None:
-		"""
-		Board constructor
-		"""
+		"""Create an empty board object"""
 		self.state = [[None]*Board.cols for row in range(Board.rows)]
+		"""2D array board state. None for empty, else bool for the player."""
 		self.heights = [0 for col in range(Board.cols)]
 		self.over = False
 
 	def move(self, col: int, turn: bool) -> bool:
 		"""
-		Validates a move, then, if the move is valid, simulates the move being taken
-		It also updates the `heights` property to reflect the new height of the column played on
-		@param col: the column the player wishes to try to play on
-		@param turn: the current player
-		@returns: True if the move was valid, False otherwise
-		@type: bool
+		Updates board object with given move, if the move is legal.
+
+		Args:
+			col: The column the player wants to play a move on.
+			turn: The moving player; False for player1 and True for player2.
+		
+		Returns:
+			A bool; hether the move was legal and therefore played.
 		"""
 		if self.colFull(col):
 			return False
@@ -28,20 +29,26 @@ class Board:
 	
 	def checkWin(self, turn: bool) -> bool:
 		"""
-		This method checks for a win and sets the `over` property to True if a win was detected.
-		@param turn: the current player
-		@returns: True is a win condition has been met, False otherwise
-		@type: bool
+		Evaluate whether the moving player has won.
+
+		Args:
+			turn: The moving player; False for player1 and True for player2.
+		
+		Returns:
+			A bool; whether the moving player has won in the current board state.
 		"""
 		self.over = self.checkWinAux(turn)
 		return self.over
 
 	def checkWinAux(self, turn: bool) -> bool:
 		"""
-		This method checks win conditions for vertical, horizontal, and both diagonals.
-		@param turn: the current player
-		@returns: True if any win condition is met, False otherwise
-		@type: bool
+		Auxiliary method to evaluate whether the moving player has won.
+
+		Args:
+			turn: The moving player; False for player1 and True for player2.
+		
+		Returns:
+			A bool; whether the moving player has won in the current board state.
 		"""
 		for i in range(Board.rows):
 			for j in range(Board.cols - Board.goal + 1):
@@ -75,18 +82,24 @@ class Board:
 
 	def colFull(self, col: int) -> bool:
 		"""
-		This method checks to see if a given column is already full.
-		@param col: the column to check
-		@returns: True if the column is full, False if it is not.
-		@type: bool
+		Evaluate whether a specific column is full of pieces.
+
+		Args:
+			col: The column which is in question.
+
+		Returns:
+			A bool; whether the column is already filled with pieces.
 		"""
 		return Board.rows <= self.heights[col]
 	
 	def top(self, col: int) -> int:
 		"""
-		This method gets the top slot of a column
-		@param col: the column index
-		@returns: the height of the specified column
-		@type: int
+		Find the top open slot in a specific column.
+
+		Args:
+			col: The column which is in question.
+
+		Returns:
+			An integer; the number of pieces already in the column.
 		"""
 		return self.heights[col]
