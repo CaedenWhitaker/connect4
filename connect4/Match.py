@@ -122,6 +122,7 @@ class Match(VisualElement):
 		text_pad_y = (self.slotRadius - size[1]) / 2
 		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding_x + text_pad_x, 
 												top_corner_scaled[1] + padding_y + text_pad_y))
+	
 		
 
 	def renderBackground(self):
@@ -195,6 +196,7 @@ class Match(VisualElement):
 		while running:
 			if pygame.event.peek(eventtype=pygame.QUIT):
 				running = False
+				return False
 			else:
 				events = pygame.event.get()
 				MouseListener.listen(events)
@@ -202,3 +204,4 @@ class Match(VisualElement):
 					self.doTurn()
 				self.render()
 				#winning banner
+		return True

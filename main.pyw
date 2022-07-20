@@ -28,7 +28,7 @@ def main():
 		player2 = HumanPlayer() if mc.player2 == 0 else AIPlayer()
 
 		match = Match(player1, player2, Board(), scale=scale)
-		match.mainloop()
+		running = match.mainloop()
 
 	
 			
