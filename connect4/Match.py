@@ -1,4 +1,5 @@
-from pickle import TRUE
+import re
+from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
@@ -41,11 +42,23 @@ class Match(VisualElement):
 		self.board = board
 		self.winning_player = None
 		
+		
 		self.moves = []
 		self.heldPiece = 0
 		self.potentialMove = 0
 		self.slotRadius = self.canvasWidth / (2 * self.board.cols)
 		self.pieceRadius = 0.8 * self.slotRadius
+
+		self.font = pygame.font.SysFont(None, 175)
+		self.p1win = self.font.render("Player 1 Wins!", True, (255,0,0))
+		self.p2win = self.font.render("Player 2 Wins!", True, (0,0,255))
+
+
+		self.font_small = pygame.font.SysFont(None, int(30 * self.scale))
+		self.move_is_invalid = False
+		self.invalid_prompt = self.font_small.render("Invalid", True, (255,255,255))
+
+
 
 	def doTurn(self):
 		"""
@@ -55,9 +68,10 @@ class Match(VisualElement):
 			col = self.player2.getNextMove(self.board)
 		else:
 			col = self.player1.getNextMove(self.board)
-
+		
 		if col is not None:
-			self.board.move(col, self.turn)
+			is_valid = self.board.move(col, self.turn)
+			#if above returns false, invalid move
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
 				if self.turn != None:
@@ -73,16 +87,40 @@ class Match(VisualElement):
 		self.renderBoard()
 		self.renderHeldPiece()
 		self.renderPotentialMove()
+		if self.move_is_invalid:
+			self.renderInvalidPrompt()
+		
 		if self.board.over:
-				font = pygame.font.SysFont(None, 175)
 				if self.winning_player == False:
-					text_obj = font.render("Player 1 Wins!", True, (255,0,0))
-					self.surface.blit(text_obj, (10,0))
+					self.surface.blit(self.p1win, (10,0))
 				if self.winning_player == True:
-					text_obj = font.render("Player 2 Wins!", True, (0,0,255))
-					self.surface.blit(text_obj, (10,0))
+					self.surface.blit(self.p2win, (10,0))
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
+	
+	def renderInvalidPrompt(self):
+		x = MouseListener.getMousePosition()[0] // self.scale
+		col = x // (2 * self.slotRadius)
+		center = self.slotToPos(Board.rows - 1, col)
+		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)
+		
+		padding = (self.slotRadius - self.pieceRadius)
+		top_corner_scaled = VisualElement.rescale(top_corner, self.scale)
+		pygame.draw.rect(self.surface, (50,50,50), (top_corner_scaled[0] + padding,
+													top_corner_scaled[1] + padding,
+													self.slotRadius*2,
+													self.slotRadius), 0, 12)
+		pygame.draw.rect(self.surface, self.colorMap[self.turn], (top_corner_scaled[0] + padding,
+																	top_corner_scaled[1] + padding,
+																	self.slotRadius*2,
+																	self.slotRadius), 5, 12)
+		
+		size = self.font_small.size("Invalid")
+		text_pad_x = ((self.slotRadius*2) - size[0]) / 2
+		text_pad_y = (self.slotRadius - size[1]) / 2
+		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding + text_pad_x, 
+												top_corner_scaled[1] + padding + text_pad_y))
+		
 
 	def renderBackground(self):
 		self.surface.fill(Match.backgroundColor)
@@ -139,6 +177,7 @@ class Match(VisualElement):
 
 	def updatePotentialMove(self):
 		self.potentialMove = self.xToCol(self.heldPiece)
+		self.move_is_invalid = self.board.colFull(self.potentialMove)
 		if self.board.colFull(self.potentialMove):
 			self.potentialMove = None
 		if self.turn:
