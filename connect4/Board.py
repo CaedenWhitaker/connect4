@@ -15,9 +15,12 @@ class Board:
 		self.moves:list[int] = list()
 	
 	def undo(self):
+		if len(self.moves) == 0:#if no pieces are on the board, do nothing
+			return False
 		col = self.moves.pop()
 		self.heights[col] -= 1
 		self.state[self.heights[col]][col] = None
+		return True
 
 
 	def move(self, col: int, turn: bool) -> bool:

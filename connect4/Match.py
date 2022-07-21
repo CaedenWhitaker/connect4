@@ -71,7 +71,9 @@ class Match(VisualElement, MouseListener):
 	
 
 	def undo(self):
-		self.board.undo()
+		undone = self.board.undo()
+		if not undone:#if no pieces are on the board, do nothing
+			return
 		if not self.board.over:
 			self.turn = not self.turn
 		if self.board.over:
