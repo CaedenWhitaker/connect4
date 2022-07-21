@@ -6,7 +6,7 @@ import math
 import pygame
 
 
-class Match(VisualElement):
+class Match(VisualElement, MouseListener):
 	player1Color = (255, 0, 0)
 	player2Color = (0, 0, 255)
 	boardColor = (255, 255, 0)
@@ -40,7 +40,9 @@ class Match(VisualElement):
 		self.player2.setTurn(self.turn)
 		self.board = board
 		self.winning_player = None
-		
+		self.running = False
+
+		self.register()
 		
 		self.moves = []
 		self.heldPiece = 0
@@ -51,6 +53,7 @@ class Match(VisualElement):
 		self.font = pygame.font.SysFont(None, 175)
 		self.p1win = self.font.render("Player 1 Wins!", True, (255,0,0))
 		self.p2win = self.font.render("Player 2 Wins!", True, (0,0,255))
+		self.tieWin = self.font.render("Tie!", True, (255,255,255))
 
 
 		self.font_small = pygame.font.SysFont(None, int(30 * self.scale))
@@ -71,9 +74,10 @@ class Match(VisualElement):
 		if col is not None:
 			self.board.move(col, self.turn)
 			self.turn = not self.turn
-			if self.board.checkWin(not self.turn):
+			win, player = self.board.checkWin(not self.turn)
+			if win:
 				if self.turn != None:
-					self.winning_player = not self.turn
+					self.winning_player = player
 				self.turn = None#this messes with telling who won
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
@@ -85,7 +89,7 @@ class Match(VisualElement):
 		self.renderBoard()
 		self.renderHeldPiece()
 		self.renderPotentialMove()
-		if self.move_is_invalid:
+		if self.move_is_invalid and not self.board.over:
 			self.renderInvalidPrompt()
 		
 		if self.board.over:
@@ -93,13 +97,14 @@ class Match(VisualElement):
 					self.surface.blit(self.p1win, (10,0))
 				if self.winning_player == True:
 					self.surface.blit(self.p2win, (10,0))
+				if self.winning_player is None:
+					self.surface.blit(self.tieWin, (10,0))
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
 	
 	def renderInvalidPrompt(self):
-		x = MouseListener.getMousePosition()[0] // self.scale
-		y = MouseListener.getMousePosition()[1]
-		col = x // (2 * self.slotRadius)
+		x = MouseListener.getMousePosition()[0] / self.scale
+		col = (x-1) // (2 * self.slotRadius)
 		center = self.slotToPos(Board.rows, col)
 		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)#translate center to top corner
 		#top_corner = (top_corner[0] + 2, top_corner[1] - 3*self.slotRadius)
@@ -191,11 +196,16 @@ class Match(VisualElement):
 	def xToCol(self, x: int):
 		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth + 1))
 	
+	def onClick(self):
+		for event in MouseListener.events:
+			if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
+				self.running = False
+	
 	def mainloop(self):
-		running = True
-		while running:
+		self.running = True
+		while self.running:
 			if pygame.event.peek(eventtype=pygame.QUIT):
-				running = False
+				self.running = False
 				return False
 			else:
 				events = pygame.event.get()
