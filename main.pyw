@@ -17,21 +17,18 @@ def main():
 		scale = 1.0
 
 	pygame.init()
-	temp_window = pygame.display.set_mode((700,700))
+	temp_window = pygame.display.set_mode((700*scale,700*scale))
 	running = True
 	while running:
-		mc = MainMenuController(size=(700,700))
-		mc.mainloop(temp_window)
-
+		mc = MainMenuController(scale)
+		mc.mainloop(temp_window)#reset the menu only after the first game
+		print(mc.player1, mc.player2)
 
 		player1 = HumanPlayer() if mc.player1 == 0 else AIPlayer()
 		player2 = HumanPlayer() if mc.player2 == 0 else AIPlayer()
 
 		match = Match(player1, player2, Board(), scale=scale)
 		running = match.mainloop()
-
-	
-			
 				
 			
 	pygame.quit()

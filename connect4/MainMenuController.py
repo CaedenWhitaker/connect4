@@ -8,8 +8,9 @@ import string
 
 class MainMenuController:
 	
-	def __init__(self, size=(400,400)):
-		self.size = size
+	def __init__(self, scale:float, size=(700,700)):
+		self.size = size[0] * scale, size[1] * scale
+		self.scale = scale
 		self.player1 = 0
 		self.player2 = 0
 		self.p1_name_widget = None
@@ -17,19 +18,27 @@ class MainMenuController:
 		self.player1_name = "AAA"
 		self.player2_name = "AAA"
 		self.loop = False
-		self.x1 = 100
-		self.x2 = 400
+		self.x1 = 100 * self.scale
+		self.x2 = 400 * self.scale
 		self.clock = pygame.time.Clock()
-		self.font = pygame.font.SysFont(None, 45)
-		theme = pygame_menu.Theme(**Constants.main_menu_style)
+		self.font = pygame.font.SysFont(None, int(45 * self.scale))
+		theme = pygame_menu.Theme(**self.scale_theme(Constants.get_main_theme()))
 		#local menu MUST be made before the main menu
 		self._make_replay_menu(None)
 		self._make_local_menu(None)
 		self._make_main_menu(theme)
 
-		self.info_surf = pygame.Surface((700,600))
+		self.info_surf = pygame.Surface((700 * self.scale, 600 * self.scale))
 		self._draw_info_layout()
 
+	def scale_theme(self, theme:dict):
+		if "title_font" in theme:
+			theme["title_font"] = pygame.font.SysFont(None, int(145 * self.scale))
+		if "title_font_size" in theme:
+			theme["title_font_size"] = int(theme["title_font_size"] * self.scale)
+		if "border_width" in theme:
+			theme["border_width"] = int(theme["border_width"] * self.scale)
+		return theme
 		
 	
 	def _make_main_menu(self, theme):
@@ -42,9 +51,9 @@ class MainMenuController:
 	def _make_local_menu(self, theme):
 		valid_chars = list(string.ascii_letters + string.digits)
 		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=4, rows=3)
-		self.local_menu.add.horizontal_margin(50)
-		self.local_menu.add.horizontal_margin(50)
-		self.local_menu.add.horizontal_margin(50)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
 		self.local_menu.add.selector("Player 1", [(" Human ",), ("Computer",)], 0, onchange=self.set_player1)
 		self.local_menu.add.selector("Player 2", [(" Human ",), ("Computer",)], 0, onchange=self.set_player2)
 		self.local_menu.add.button("Back", action=pygame_menu.events.BACK)
@@ -53,9 +62,9 @@ class MainMenuController:
 		self.p2_name_widget = self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
 																maxchar=3, valid_chars=valid_chars)
 		self.local_menu.add.button("Confirm", action=self.close)
-		self.local_menu.add.horizontal_margin(50)
-		self.local_menu.add.horizontal_margin(50)
-		self.local_menu.add.horizontal_margin(50)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
+		self.local_menu.add.horizontal_margin(50 * self.scale)
 		for widget in self.local_menu.get_widgets():
 			widget.set_onselect(self.update_names)
 			widget.set_onmouseover(self.update_names)
@@ -68,7 +77,7 @@ class MainMenuController:
 	def _make_replay_menu(self, theme):
 
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
-		self.replay_menu.add.dropselect("Game:", [("Item" + str(x), {}) for x in range(10)], 0, onchange=self.update_info)
+		self.replay_menu.add.dropselect("Game:", [("Item" + str(x), {}) for x in range(100)], 0, onchange=self.update_info)
 		self.replay_menu.add.button("Confirm", action=self.close_replay)
 
 
@@ -81,12 +90,15 @@ class MainMenuController:
 			self.p2_name_widget.set_value(self.player2_name)
 		else:
 			self.p2_name_widget.set_value("CP2")
+		print(self.player1, self.player2)
 	
 	def set_player1(self, value:tuple):
 		self.player1 = value[1]
 		if self.player1 == 1:
+			print("P1 is Comp")
 			self.p1_name_widget.set_value("CP1")
 		if self.player1 == 0:
+			print("P1 is human")
 			self.p1_name_widget.set_value(self.player1_name)
 	
 	def p1_change_name(self, value:str):
@@ -100,8 +112,10 @@ class MainMenuController:
 	def set_player2(self, value:tuple):
 		self.player2 = value[1]
 		if self.player2 == 1:
+			print("P2 is Comp")
 			self.p2_name_widget.set_value("CP2")
 		if self.player2 == 0:
+			print("P2 is human")
 			self.p2_name_widget.set_value(self.player2_name)
 	
 	def p2_change_name(self, value:str):
@@ -129,10 +143,10 @@ class MainMenuController:
 		p2_label = self.font.render(p2_label_text, True, (255,255,255))
 		moves_label = self.font.render(moves_label_text, True, (255,255,255))
 		win_type_label = self.font.render(win_type_text, True, (255,255,255))
-		self.info_surf.blit(p1_label, (self.x1,50))
-		self.info_surf.blit(p2_label, (self.x2, 50))
-		self.info_surf.blit(moves_label, (self.x1, 250))
-		self.info_surf.blit(win_type_label, (self.x1, 250 + 50))
+		self.info_surf.blit(p1_label, (self.x1,50 * self.scale))
+		self.info_surf.blit(p2_label, (self.x2, 50 * self.scale))
+		self.info_surf.blit(moves_label, (self.x1, 250 * self.scale))
+		self.info_surf.blit(win_type_label, (self.x1, (250 + 50) * self.scale))
 		
 	
 	def update_info(self, something, info:dict):
@@ -151,26 +165,27 @@ class MainMenuController:
 		
 		p1_name_label = self.font.render("AJR", True, (255,255,255))
 		p1_type_label = self.font.render("Computer", True, (255,255,255))
-		p2_name_label = self.font.render("C_W", True, (255,255,255))
+		p2_name_label = self.font.render("CGW", True, (255,255,255))
 		p2_type_label = self.font.render("Human", True, (255,255,255))
 		moves_label = self.font.render("42", True, (255,255,255))
 		winner_label = self.font.render("Tie", True, (255,255,255))
 
-		start_y = 100
-		self.info_surf.blit(p1_name_label, (self.x1, start_y))
-		self.info_surf.blit(p1_type_label, (self.x1, start_y + 50))
+		start_y = 100 
+		self.info_surf.blit(p1_name_label, (self.x1, start_y * self.scale))
+		self.info_surf.blit(p1_type_label, (self.x1, (start_y + 50) * self.scale))
 
-		self.info_surf.blit(p2_name_label, (self.x2, start_y))
-		self.info_surf.blit(p2_type_label, (self.x2, start_y + 50))
+		self.info_surf.blit(p2_name_label, (self.x2, start_y * self.scale))
+		self.info_surf.blit(p2_type_label, (self.x2, (start_y + 50) * self.scale))
 
-		self.info_surf.blit(moves_label, (self.x1 + winner_label_size[0], 250))
-		self.info_surf.blit(winner_label, (self.x1 + winner_label_size[0], 250 + 50))
+		self.info_surf.blit(moves_label, (self.x1 + winner_label_size[0], 250 * self.scale))
+		self.info_surf.blit(winner_label, (self.x1 + winner_label_size[0], (250 + 50) * self.scale))
 
 	def close(self):
 		self.loop = False
 	
 	def close_replay(self):
 		pass
+	
 	
 	def mainloop(self, window:pygame.Surface):
 		self.loop = True
@@ -180,9 +195,8 @@ class MainMenuController:
 				self.main_menu.draw(window)
 				self.main_menu.update(pygame.event.get())
 				if self.main_menu._current is self.replay_menu:
-					window.blit(self.info_surf, (0,250))
+					window.blit(self.info_surf, (0 * self.scale, 250 * self.scale))
 				pygame.display.update()
-		self.main_menu._current = self.main_menu
 			
 
 
