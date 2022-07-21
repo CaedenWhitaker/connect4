@@ -90,15 +90,12 @@ class MainMenuController:
 			self.p2_name_widget.set_value(self.player2_name)
 		else:
 			self.p2_name_widget.set_value("CP2")
-		print(self.player1, self.player2)
 	
 	def set_player1(self, value:tuple):
 		self.player1 = value[1]
 		if self.player1 == 1:
-			print("P1 is Comp")
 			self.p1_name_widget.set_value("CP1")
 		if self.player1 == 0:
-			print("P1 is human")
 			self.p1_name_widget.set_value(self.player1_name)
 	
 	def p1_change_name(self, value:str):
@@ -112,10 +109,8 @@ class MainMenuController:
 	def set_player2(self, value:tuple):
 		self.player2 = value[1]
 		if self.player2 == 1:
-			print("P2 is Comp")
 			self.p2_name_widget.set_value("CP2")
 		if self.player2 == 0:
-			print("P2 is human")
 			self.p2_name_widget.set_value(self.player2_name)
 	
 	def p2_change_name(self, value:str):
