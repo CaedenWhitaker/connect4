@@ -20,6 +20,8 @@ class HumanPlayer(Player, MouseListener):
 		if self.turn == self.order:
 			for event in MouseListener.events:
 				if not self.selected and event.type == pygame.MOUSEBUTTONUP:
+					if event.pos[0] <= 27 and event.pos[1] <= 27:#do not drop piece if clicking on the menu button
+						return
 					self.heldPiece = event.pos[0]
 					self.selected = True
 		else:

@@ -1,7 +1,10 @@
+from platform import python_branch
+from connect4.Constants import Constants
 from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
+from connect4.GameMenuController import GameMenuController
 import math
 import pygame
 
@@ -55,12 +58,27 @@ class Match(VisualElement, MouseListener):
 		self.p2win = self.font.render("Player 2 Wins!", True, (0,0,255))
 		self.tieWin = self.font.render("Tie!", True, (255,255,255))
 
-
 		self.font_small = pygame.font.SysFont(None, int(30 * self.scale))
 		self.move_is_invalid = False
 		self.invalid_prompt = self.font_small.render("Invalid", True, (255,255,255))
 
+		img = pygame.image.load(Constants.GEAR_ICON_PATH)
+		self.gear_icon = pygame.transform.scale(img, (25*self.scale, 25*self.scale))
+		self.game_menu = GameMenuController(self.scale)
+		self.open_game_menu = False
+		self.quit = False
 
+	
+
+	def undo(self):
+		self.board.undo()
+		if not self.board.over:
+			self.turn = not self.turn
+		if self.board.over:
+			self.board.over = False
+			self.turn = self.winning_player
+			self.player1.setTurn(self.turn)
+			self.player2.setTurn(self.turn)
 
 	def doTurn(self):
 		"""
@@ -93,14 +111,30 @@ class Match(VisualElement, MouseListener):
 			self.renderInvalidPrompt()
 		
 		if self.board.over:
-				if self.winning_player == False:
-					self.surface.blit(self.p1win, (10,0))
-				if self.winning_player == True:
-					self.surface.blit(self.p2win, (10,0))
-				if self.winning_player is None:
-					self.surface.blit(self.tieWin, (10,0))
+			if self.winning_player == False:
+				self.surface.blit(self.p1win, (10,0))
+			if self.winning_player == True:
+				self.surface.blit(self.p2win, (10,0))
+			if self.winning_player is None:
+				self.surface.blit(self.tieWin, (10,0))
+		
+		self.renderMenuButton()
+		if self.open_game_menu:
+			self.open_game_menu = False
+			ret_val = self.game_menu.mainloop(self.surface)
+			if ret_val == "noop":
+				pass
+			if ret_val == "quit":
+				self.quit = True
+				#if self.board.over: #save game still if leaving when finished
+			if ret_val == "undo":
+				self.undo()
+		
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
+	
+	def renderMenuButton(self):
+		self.surface.blit(self.gear_icon, (0,0))
 	
 	def renderInvalidPrompt(self):
 		x = MouseListener.getMousePosition()[0] / self.scale
@@ -198,12 +232,17 @@ class Match(VisualElement, MouseListener):
 	
 	def onClick(self):
 		for event in MouseListener.events:
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if event.pos[0] <= 27 and event.pos[1] <= 27:
+					self.open_game_menu = True
+					continue
+			#if the menu button was clicked, the code will not get this far
 			if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
 				self.running = False
 	
 	def mainloop(self):
 		self.running = True
-		while self.running:
+		while self.running and not self.quit:
 			if pygame.event.peek(eventtype=pygame.QUIT):
 				self.running = False
 				return False

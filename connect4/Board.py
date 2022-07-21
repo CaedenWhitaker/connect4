@@ -1,3 +1,5 @@
+
+
 class Board:
 	rows = 6
 	cols = 7
@@ -10,6 +12,13 @@ class Board:
 		self.state = [[None]*Board.cols for row in range(Board.rows)]
 		self.heights = [0 for _ in range(Board.cols)]
 		self.over = False
+		self.moves:list[int] = list()
+	
+	def undo(self):
+		col = self.moves.pop()
+		self.heights[col] -= 1
+		self.state[self.heights[col]][col] = None
+
 
 	def move(self, col: int, turn: bool) -> bool:
 		"""
@@ -21,10 +30,10 @@ class Board:
 		@type: bool
 		"""
 		if self.colFull(col):
-			print(f"col: {col} is full")
 			return False
 		self.state[self.heights[col]][col] = turn
 		self.heights[col] += 1
+		self.moves.append(col)
 		return True
 	
 	def checkWin(self, turn: bool) -> bool:
