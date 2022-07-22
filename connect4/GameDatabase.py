@@ -203,7 +203,7 @@ class GameDatabase:
 					"p1type": match.player1.type,
 					"p2type": match.player2.type,
 					"winner": str(match.winner),
-					"moves": "".join(map(str,match.moves))
+					"moves": "".join(map(str,match.board.moves))
 				}
 			)
 			connection.commit()

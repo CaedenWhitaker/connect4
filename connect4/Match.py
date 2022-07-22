@@ -49,7 +49,6 @@ class Match(VisualElement, MouseListener):
 
 		self.register()
 		
-		self.moves = []
 		self.heldPiece = 0
 		self.potentialMove = 0
 		self.slotRadius = self.canvasWidth / (2 * self.board.cols)
@@ -98,7 +97,6 @@ class Match(VisualElement, MouseListener):
 		
 		if col is not None:
 			self.board.move(col, self.turn)
-			self.moves.append(col)
 			win = self.board.checkWin(self.turn)
 			self.turn = not self.turn
 			if win != 0:
