@@ -4,11 +4,12 @@ import random
 
 
 class AIPlayer(Player):
-	def __init__(self):
+	def __init__(self, name):
 		"""
 
 		"""
-		super().__init__()
+		super().__init__(name)
+		self.type = "C"
 		self.heldPiece = 0.5
 		self.direction = 1
 	
