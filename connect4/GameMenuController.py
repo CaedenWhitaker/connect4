@@ -34,6 +34,7 @@ class GameMenuController:
 
 	def mainloop(self, window:pygame.Surface):
 		self.looping = True
+		self.close_with = "noop"
 		while self.looping:
 			if pygame.event.peek(pygame.QUIT):
 				break
