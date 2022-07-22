@@ -78,9 +78,12 @@ class Match(VisualElement, MouseListener):
 			self.turn = not self.turn
 		if self.board.over:
 			self.board.over = False
-			self.turn = self.winning_player
-			self.player1.setTurn(self.turn)
-			self.player2.setTurn(self.turn)
+			if self.winning_player is not None:
+				self.turn = self.winning_player
+			else:
+				self.turn = True
+		self.player1.setTurn(self.turn)
+		self.player2.setTurn(self.turn)
 
 	def doTurn(self):
 		"""
@@ -252,6 +255,7 @@ class Match(VisualElement, MouseListener):
 				events = pygame.event.get()
 				MouseListener.listen(events)
 				if not self.board.over:
+					print("In mainloop else", self.turn, self.player1.turn, self.player2.turn, self.board.over)
 					self.doTurn()
 				self.render()
 				#winning banner
