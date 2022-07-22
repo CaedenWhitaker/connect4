@@ -4,6 +4,7 @@ from connect4.Player import Player
 from connect4.Board import Board
 import math
 import pygame
+import datetime
 
 
 class Match(VisualElement):
@@ -39,8 +40,10 @@ class Match(VisualElement):
 		self.player2.setOrder(True)
 		self.player2.setTurn(self.turn)
 		self.board = board
-		self.winning_player = None
-		
+		self.winner = 0
+		self.start = datetime.datetime.now()
+		self.end = datetime.datetime.min
+
 		self.moves = []
 		self.heldPiece = 0
 		self.potentialMove = 0
@@ -62,7 +65,8 @@ class Match(VisualElement):
 			self.turn = not self.turn
 			if self.board.checkWin(not self.turn):
 				if self.turn != None:
-					self.winning_player = not self.turn
+					self.winner = int(self.turn) + 1
+					self.end = datetime.datetime.now()
 				self.turn = None#this messes with telling who won
 				MouseListener.clear()
 			self.player1.setTurn(self.turn)
@@ -75,10 +79,10 @@ class Match(VisualElement):
 		self.renderPotentialMove()
 		if self.board.over:
 				font = pygame.font.SysFont(None, 175)
-				if self.winning_player == False:
+				if self.winner == 1:
 					text_obj = font.render("Player 1 Wins!", True, (255,0,0))
 					self.surface.blit(text_obj, (10,0))
-				if self.winning_player == True:
+				if self.winner == 2:
 					text_obj = font.render("Player 2 Wins!", True, (0,0,255))
 					self.surface.blit(text_obj, (10,0))
 		pygame.display.update()
