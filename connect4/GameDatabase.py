@@ -1,54 +1,294 @@
-from connect4.Constants import Constants
 from connect4.Match import Match
 import sqlite3
-import os
 
 
 class GameDatabase:
-	def __init__(self, path=Constants.DATABASE_PATH) -> None:
+	def __init__(self, path="connect4.db") -> None:
 		self.path = path
+		self.safe = self.create() is not None
+		self.errors = False
+		self.players = []
+		self.matches = []
+		self.moves = []
 
-	def update(self, match: Match) -> bool:
-		with sqlite3.connect(Constants.DATABASE_PATH) as connection:
-			cursor = connection.cursor()
-			try:
-				cursor.execute("""
-				INSERT INTO Players(?,0,0,0) 
-				SELECT 5, 'text to insert' 
-				WHERE NOT EXISTS(SELECT 1 FROM memos WHERE id = 5 AND text = 'text to insert');
-				""")
-				return True
-			except sqlite3.OperationalError:
-				return False
+	def getPlayers(self):
+		self.errors = self.errors or not self.loadPlayers()
+		self.players = [
+			dict(zip(("player","wins","losses","draws"), row))
+			for row in self.players
+		]
+		return self.players
+
+	def loadPlayers(self) -> bool:
+		try:
+			connection = sqlite3.connect(self.path)
+			self.players = connection.execute(
+				"""
+					SELECT player, wins, losses, draws FROM Players;
+				"""
+			).fetchall()
+			return True
+		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
+			return False
+		finally:
+			if connection is not None:
+				connection.close()
+	
+	def getMatches(self):
+		self.errors = self.errors or not self.loadMatches()
+		self.matches = [
+			dict(zip(("start","end","plname","p2name","p1type","p2type","winner"), row))
+			for row in self.matches
+		]
+		for match in self.matches:
+			self. errors = self.errors or not self.loadMoves(match["start"], match["end"])
+			match["moves"] = [column for turn, column in sorted(self.moves)]
+		return self.matches
+
+	def loadMatches(self) -> bool:
+		try:
+			connection = sqlite3.connect(self.path)
+			self.matches = connection.execute(
+				"""
+					SELECT start, end, p1name, p2name, p1type, p2type, winner FROM Matches;
+				"""
+			).fetchall()
+			return True
+		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
+			return False
+		finally:
+			if connection is not None:
+				connection.close()
+	
+	def loadMoves(self, start, end) -> bool:
+		try:
+			connection = sqlite3.connect(self.path)
+			self.moves = connection.execute(
+				"""
+					SELECT turn, column FROM Moves
+					WHERE start = :start AND end = :end;
+				""",
+				{
+					"start": start,
+					"end": end
+				}
+			).fetchall()
+			return True
+		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
+			return False
+		finally:
+			if connection is not None:
+				connection.close()
+
+	def save(self, match: Match) -> bool:
+
+		player1WinsDelta = int(match.winner == 1)
+		player1LossesDelta = int(match.winner == 2)
+		player1DrawsDelta = int(match.winner == 3)
+
+		player2WinsDelta = int(match.winner == 2)
+		player2LossesDelta = int(match.winner == 1)
+		player2DrawsDelta = int(match.winner == 3)
+
+		connection = None
+		try:
+			connection = sqlite3.connect(self.path)
+			
+			player1 = connection.execute(
+				"""
+					SELECT player, wins, losses, draws FROM Players
+					WHERE player = :player;
+				""",
+				{
+					"player": match.player1.name
+				}
+			).fetchall()
+
+			player2 = connection.execute(
+				"""
+					SELECT player, wins, losses, draws FROM Players
+					WHERE player = :player;
+				""",
+				{
+					"player": match.player2.name
+				}
+			).fetchall()
+
+			if len(player1) > 0:
+				player1 = player1[0]
+				connection.execute(
+					"""
+						UPDATE Players
+						SET wins = :wins,
+							losses = :losses,
+							draws = :draws
+						WHERE player = :player;
+					""",
+					{
+						"player": match.player1.name,
+						"wins": player1[1] + player1WinsDelta,
+						"losses": player1[2] + player1LossesDelta,
+						"draws": player1[3] + player1DrawsDelta
+					}
+				)
+			else:
+				result = connection.execute(
+					"""
+						INSERT INTO Players(
+							player,
+							wins,
+							losses,
+							draws
+						)
+						VALUES(
+							:player,
+							:wins,
+							:losses,
+							:draws
+						);
+					""",
+					{
+						"player": match.player1.name,
+						"wins": player1WinsDelta,
+						"losses": player1LossesDelta,
+						"draws": player1DrawsDelta
+					}
+				)
+			if len(player2) > 0:
+				player2 = player2[0]
+				connection.execute(
+					"""
+						UPDATE Players
+						SET wins = :wins,
+							losses = :losses,
+							draws = :draws
+						WHERE player = :player;
+					""",
+					{
+						"player": match.player2.name,
+						"wins": player2[1] + player2WinsDelta,
+						"losses": player2[2] + player2LossesDelta,
+						"draws": player2[3] + player2DrawsDelta
+					}
+				)
+			else:
+				result = connection.execute(
+					"""
+						INSERT INTO Players(
+							player,
+							wins,
+							losses,
+							draws
+						)
+						VALUES(
+							:player,
+							:wins,
+							:losses,
+							:draws
+						);
+					""",
+					{
+						"player": match.player2.name,
+						"wins": player2WinsDelta,
+						"losses": player2LossesDelta,
+						"draws": player2DrawsDelta
+					}
+				)
+			
+			connection.execute(
+				"""
+					INSERT INTO Matches(
+						start,
+						end,
+						p1name,
+						p2name,
+						p1type,
+						p2type,
+						winner
+					)
+					VALUES(
+						:start,
+						:end,
+						:p1name,
+						:p2name,
+						:p1type,
+						:p2type,
+						:winner
+					);
+				""",
+				{
+					"start": match.start,
+					"end": match.end,
+					"p1name": match.player1.name,
+					"p2name": match.player2.name,
+					"p1type": match.player1.type,
+					"p2type": match.player2.type,
+					"winner": str(match.winner)
+				}
+			)
+			connection.executemany(
+				f"""
+					INSERT INTO Moves(
+						turn,
+						start,
+						end,
+						column
+					)
+					VALUES(
+						:turn,
+						:start,
+						:end,
+						:column
+					);
+				""",
+				[
+					{
+						"turn": turn,
+						"start": match.start,
+						"end": match.end,
+						"column": column
+					}
+					for turn, column in enumerate(match.moves)
+				]
+			)
+
+			connection.commit()
+			return True
+		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
+			return False
+		finally:
+			if connection is not None:
+				connection.close()
 
 	def create(self) -> bool:
 		connection = None
 		try:
-			connection = sqlite3.connect(Constants.DATABASE_PATH)
-			cursor = connection.cursor()
-			cursor.execute("""
-				CREATE TABLE Player(
+			connection = sqlite3.connect(self.path)
+			connection.execute("""
+				CREATE TABLE Players(
 					player CHAR(3) NOT NULL,
 					wins INTEGER NOT NULL,
-					draws INTEGER NOT NULL,
 					losses INTEGER NOT NULL,
+					draws INTEGER NOT NULL,
 					PRIMARY KEY(player)
-				)
+				);
 			""")
-			cursor.execute("""
-			CREATE TABLE Matches(
+			connection.execute("""
+				CREATE TABLE Matches(
 					start DATETIME NOT NULL,
 					end DATETIME NOT NULL,
-					player1 CHAR(3) NOT NULL,
-					player2 CHAR(3) NOT NULL,
-					win INTEGER NOT NULL,
+					p1name CHAR(3) NOT NULL,
+					p2name CHAR(3) NOT NULL,
+					p1type CHAR(1) NOT NULL,
+					p2type CHAR(1) NOT NULL,
+					winner CHAR(1) NOT NULL,
 					PRIMARY KEY(start, end)
-					FOREIGN KEY(player1) REFERENCES Player(player)
-					FOREIGN KEY(player2) REFERENCES Player(player)
-				)
+					FOREIGN KEY(p1name) REFERENCES Player(player)
+					FOREIGN KEY(p2name) REFERENCES Player(player)
+				);
 			""")
-			cursor.execute("""
-			CREATE TABLE Moves(
+			connection.execute("""
+				CREATE TABLE Moves(
 					turn INTEGER NOT NULL,
 					start DATETIME NOT NULL,
 					end DATETIME NOT NULL,
@@ -56,7 +296,7 @@ class GameDatabase:
 					PRIMARY KEY(turn, start, end)
 					FOREIGN KEY(start) REFERENCES Matches(start)
 					FOREIGN KEY(end) REFERENCES Matches(end)
-				)
+				);
 			""")
 			return True
 		except sqlite3.OperationalError:
@@ -66,6 +306,3 @@ class GameDatabase:
 		finally:
 			if connection is not None:
 				connection.close()
-		
-
-
