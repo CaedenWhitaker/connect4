@@ -1,3 +1,5 @@
+
+
 class Board:
 	rows = 6
 	cols = 7
@@ -9,6 +11,16 @@ class Board:
 		"""2D array board state. None for empty, else bool for the player."""
 		self.heights = [0 for col in range(Board.cols)]
 		self.over = False
+		self.moves:list[int] = list()
+	
+	def undo(self):
+		if len(self.moves) == 0:#if no pieces are on the board, do nothing
+			return False
+		col = self.moves.pop()
+		self.heights[col] -= 1
+		self.state[self.heights[col]][col] = None
+		return True
+
 
 	def move(self, col: int, turn: bool) -> bool:
 		"""
@@ -25,9 +37,10 @@ class Board:
 			return False
 		self.state[self.heights[col]][col] = turn
 		self.heights[col] += 1
+		self.moves.append(col)
 		return True
 	
-	def checkWin(self, turn: bool) -> bool:
+	def checkWin(self, turn: bool) -> int:
 		"""
 		Evaluate whether the moving player has won.
 
@@ -37,8 +50,19 @@ class Board:
 		Returns:
 			A bool; whether the moving player has won in the current board state.
 		"""
-		self.over = self.checkWinAux(turn)
-		return self.over
+		if self.checkFull():
+			self.over = True
+			return 3
+		if self.checkWinAux(turn):
+			self.over = True
+			return int(turn) + 1
+		return 0
+	
+	def checkFull(self):
+		for col in self.heights:
+			if col < Board.rows:
+				return False
+		return True
 
 	def checkWinAux(self, turn: bool) -> bool:
 		"""

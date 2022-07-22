@@ -11,8 +11,8 @@ class MouseListener:
 	]
 	def listen(events):
 		"""
-		This method iterates over the game events, filters out any non-mouse related
-		events, and calls on a listeners onClick method
+		This static method iterates over the game events, filters out any 
+		non-mouse related events, and calls on a listeners onClick method
 		@param events: the pygame events for the frame
 		@returns: None
 		@type: None

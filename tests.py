@@ -39,7 +39,6 @@ def test_board_move():
 	board.move(0, False)
 	board.move(0, True)
 	board.move(2, False)
-
 	#assert
 	assert board.state[0][0] == False
 	assert board.state[1][0] == True
@@ -51,7 +50,6 @@ def test_board_move():
 def test_board_checkWin_vert():
 	#this test goes for checkWinAux as well
 	#takes in turn:bool
-
 	#arrange
 	board = Board()
 	board.move(0, True)
@@ -68,7 +66,6 @@ def test_board_checkWin_vert():
 def test_board_checkWin_horiz():
 	#this test goes for checkWinAux as well
 	#takes in turn:bool
-
 	#arrange
 	board = Board()
 	board.move(0, False)
@@ -85,7 +82,6 @@ def test_board_checkWin_horiz():
 def test_board_checkWin_diag():
 	#this test goes for checkWinAux as well
 	#takes in turn:bool
-
 	#arrange
 	board = Board()
 	board.move(0, False)
@@ -113,7 +109,6 @@ def test_board_colFull():
 
 	for _ in range(6):
 		board.move(0, True)
-
 	#act
 	board.move(0, False)
 
