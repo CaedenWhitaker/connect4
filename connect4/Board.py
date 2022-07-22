@@ -1,3 +1,5 @@
+
+
 class Board:
 	rows = 6
 	cols = 7
@@ -8,8 +10,18 @@ class Board:
 		Board constructor
 		"""
 		self.state = [[None]*Board.cols for row in range(Board.rows)]
-		self.heights = [0 for col in range(Board.cols)]
+		self.heights = [0 for _ in range(Board.cols)]
 		self.over = False
+		self.moves:list[int] = list()
+	
+	def undo(self):
+		if len(self.moves) == 0:#if no pieces are on the board, do nothing
+			return False
+		col = self.moves.pop()
+		self.heights[col] -= 1
+		self.state[self.heights[col]][col] = None
+		return True
+
 
 	def move(self, col: int, turn: bool) -> bool:
 		"""
@@ -24,6 +36,7 @@ class Board:
 			return False
 		self.state[self.heights[col]][col] = turn
 		self.heights[col] += 1
+		self.moves.append(col)
 		return True
 	
 	def checkWin(self, turn: bool) -> bool:
@@ -31,10 +44,18 @@ class Board:
 		This method checks for a win and sets the `over` property to True if a win was detected.
 		@param turn: the current player
 		@returns: True is a win condition has been met, False otherwise
-		@type: bool
 		"""
+		if self.checkFull():
+			self.over = True
+			return (self.over, None)
 		self.over = self.checkWinAux(turn)
-		return self.over
+		return (self.over, turn)
+	
+	def checkFull(self):
+		for col in self.heights:
+			if col < Board.rows:
+				return False
+		return True
 
 	def checkWinAux(self, turn: bool) -> bool:
 		"""

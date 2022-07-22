@@ -1,12 +1,15 @@
-from pickle import TRUE
+from platform import python_branch
+from connect4.Constants import Constants
+from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
 from connect4.Board import Board
+from connect4.GameMenuController import GameMenuController
 import math
 import pygame
 
 
-class Match(VisualElement):
+class Match(VisualElement, MouseListener):
 	player1Color = (255, 0, 0)
 	player2Color = (0, 0, 255)
 	boardColor = (255, 255, 0)
@@ -40,12 +43,47 @@ class Match(VisualElement):
 		self.player2.setTurn(self.turn)
 		self.board = board
 		self.winning_player = None
+		self.running = False
+
+		self.register()
 		
 		self.moves = []
 		self.heldPiece = 0
 		self.potentialMove = 0
 		self.slotRadius = self.canvasWidth / (2 * self.board.cols)
 		self.pieceRadius = 0.8 * self.slotRadius
+
+		self.font = pygame.font.SysFont(None, 175)
+		self.p1win = self.font.render("Player 1 Wins!", True, (255,0,0))
+		self.p2win = self.font.render("Player 2 Wins!", True, (0,0,255))
+		self.tieWin = self.font.render("Tie!", True, (255,255,255))
+
+		self.font_small = pygame.font.SysFont(None, int(30 * self.scale))
+		self.move_is_invalid = False
+		self.invalid_prompt = self.font_small.render("Invalid", True, (255,255,255))
+
+		img = pygame.image.load(Constants.GEAR_ICON_PATH)
+		self.gear_icon = pygame.transform.scale(img, (25*self.scale, 25*self.scale))
+		self.game_menu = GameMenuController(self.scale)
+		self.open_game_menu = False
+		self.quit = False
+
+	
+
+	def undo(self):
+		undone = self.board.undo()
+		if not undone:#if no pieces are on the board, do nothing
+			return
+		if not self.board.over:
+			self.turn = not self.turn
+		if self.board.over:
+			self.board.over = False
+			if self.winning_player is not None:
+				self.turn = self.winning_player
+			else:
+				self.turn = True
+		self.player1.setTurn(self.turn)
+		self.player2.setTurn(self.turn)
 
 	def doTurn(self):
 		"""
@@ -55,13 +93,14 @@ class Match(VisualElement):
 			col = self.player2.getNextMove(self.board)
 		else:
 			col = self.player1.getNextMove(self.board)
-
+		
 		if col is not None:
 			self.board.move(col, self.turn)
 			self.turn = not self.turn
-			if self.board.checkWin(not self.turn):
+			win, player = self.board.checkWin(not self.turn)
+			if win:
 				if self.turn != None:
-					self.winning_player = not self.turn
+					self.winning_player = player
 				self.turn = None#this messes with telling who won
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
@@ -73,16 +112,66 @@ class Match(VisualElement):
 		self.renderBoard()
 		self.renderHeldPiece()
 		self.renderPotentialMove()
+		if self.move_is_invalid and not self.board.over:
+			self.renderInvalidPrompt()
+		
 		if self.board.over:
-				font = pygame.font.SysFont(None, 175)
-				if self.winning_player == False:
-					text_obj = font.render("Player 1 Wins!", True, (255,0,0))
-					self.surface.blit(text_obj, (10,0))
-				if self.winning_player == True:
-					text_obj = font.render("Player 2 Wins!", True, (0,0,255))
-					self.surface.blit(text_obj, (10,0))
+			if self.winning_player == False:
+				self.surface.blit(self.p1win, (10,0))
+			if self.winning_player == True:
+				self.surface.blit(self.p2win, (10,0))
+			if self.winning_player is None:
+				self.surface.blit(self.tieWin, (10,0))
+		
+		self.renderMenuButton()
+		if self.open_game_menu:
+			self.open_game_menu = False
+			ret_val = self.game_menu.mainloop(self.surface)
+			if ret_val == "noop":
+				pass
+			if ret_val == "quit":
+				self.quit = True
+				#if self.board.over: #save game still if leaving when finished
+			if ret_val == "undo":
+				self.undo()
+			if ret_val == "save":
+				#save and quit
+				#TODO save
+				self.quit = True
+		
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
+	
+	def renderMenuButton(self):
+		self.surface.blit(self.gear_icon, (0,0))
+	
+	def renderInvalidPrompt(self):
+		x = MouseListener.getMousePosition()[0] / self.scale
+		col = (x-1) // (2 * self.slotRadius)
+		center = self.slotToPos(Board.rows, col)
+		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)#translate center to top corner
+		#top_corner = (top_corner[0] + 2, top_corner[1] - 3*self.slotRadius)
+		
+		
+		padding_x = (self.slotRadius - self.pieceRadius)
+		padding_y = self.slotRadius - (self.slotRadius//4) - 2
+		top_corner_scaled = VisualElement.rescale(top_corner, self.scale)
+		pygame.draw.rect(self.surface, (50,50,50), (top_corner_scaled[0] + padding_x,
+													top_corner_scaled[1] + padding_y,
+													self.slotRadius*2,
+													self.slotRadius), 0, 12)
+		pygame.draw.rect(self.surface, self.colorMap[self.turn], (top_corner_scaled[0] + padding_x,
+																	top_corner_scaled[1] + padding_y,
+																	self.slotRadius*2,
+																	self.slotRadius), 5, 12)
+		
+		size = self.font_small.size("Invalid")
+		text_pad_x = ((self.slotRadius*2) - size[0]) / 2
+		text_pad_y = (self.slotRadius - size[1]) / 2
+		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding_x + text_pad_x, 
+												top_corner_scaled[1] + padding_y + text_pad_y))
+	
+		
 
 	def renderBackground(self):
 		self.surface.fill(Match.backgroundColor)
@@ -139,6 +228,7 @@ class Match(VisualElement):
 
 	def updatePotentialMove(self):
 		self.potentialMove = self.xToCol(self.heldPiece)
+		self.move_is_invalid = self.board.colFull(self.potentialMove)
 		if self.board.colFull(self.potentialMove):
 			self.potentialMove = None
 		if self.turn:
@@ -148,3 +238,28 @@ class Match(VisualElement):
 	
 	def xToCol(self, x: int):
 		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth + 1))
+	
+	def onClick(self):
+		for event in MouseListener.events:
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if event.pos[0] <= 27 and event.pos[1] <= 27:
+					self.open_game_menu = True
+					continue
+			#if the menu button was clicked, the code will not get this far
+			#if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
+				#self.running = False
+	
+	def mainloop(self):
+		self.running = True
+		while self.running and not self.quit:
+			if pygame.event.peek(eventtype=pygame.QUIT):
+				self.running = False
+				return False
+			else:
+				events = pygame.event.get()
+				MouseListener.listen(events)
+				if not self.board.over:
+					self.doTurn()
+				self.render()
+				#winning banner
+		return True
