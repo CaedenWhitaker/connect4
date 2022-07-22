@@ -37,12 +37,12 @@ class GameDatabase:
 	def getMatches(self):
 		self.errors = self.errors or not self.loadMatches()
 		self.matches = [
-			dict(zip(("start","end","plname","p2name","p1type","p2type","winner"), row))
+			dict(zip(("start","end","plname","p2name","p1type","p2type","winner","moves"), row))
 			for row in self.matches
 		]
 		for match in self.matches:
-			self. errors = self.errors or not self.loadMoves(match["start"], match["end"])
-			match["moves"] = [column for turn, column in sorted(self.moves)]
+			match["winner"] = int(match["winner"])
+			match["moves"] = list(map(int, match["moves"]))
 		return self.matches
 
 	def loadMatches(self) -> bool:
@@ -50,28 +50,8 @@ class GameDatabase:
 			connection = sqlite3.connect(self.path)
 			self.matches = connection.execute(
 				"""
-					SELECT start, end, p1name, p2name, p1type, p2type, winner FROM Matches;
+					SELECT start, end, p1name, p2name, p1type, p2type, winner, moves FROM Matches;
 				"""
-			).fetchall()
-			return True
-		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
-			return False
-		finally:
-			if connection is not None:
-				connection.close()
-	
-	def loadMoves(self, start, end) -> bool:
-		try:
-			connection = sqlite3.connect(self.path)
-			self.moves = connection.execute(
-				"""
-					SELECT turn, column FROM Moves
-					WHERE start = :start AND end = :end;
-				""",
-				{
-					"start": start,
-					"end": end
-				}
 			).fetchall()
 			return True
 		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
@@ -81,7 +61,6 @@ class GameDatabase:
 				connection.close()
 
 	def save(self, match: Match) -> bool:
-
 		player1WinsDelta = int(match.winner == 1)
 		player1LossesDelta = int(match.winner == 2)
 		player1DrawsDelta = int(match.winner == 3)
@@ -93,7 +72,6 @@ class GameDatabase:
 		connection = None
 		try:
 			connection = sqlite3.connect(self.path)
-			
 			player1 = connection.execute(
 				"""
 					SELECT player, wins, losses, draws FROM Players
@@ -132,7 +110,7 @@ class GameDatabase:
 					}
 				)
 			else:
-				result = connection.execute(
+				connection.execute(
 					"""
 						INSERT INTO Players(
 							player,
@@ -172,7 +150,7 @@ class GameDatabase:
 					}
 				)
 			else:
-				result = connection.execute(
+				connection.execute(
 					"""
 						INSERT INTO Players(
 							player,
@@ -194,7 +172,6 @@ class GameDatabase:
 						"draws": player2DrawsDelta
 					}
 				)
-			
 			connection.execute(
 				"""
 					INSERT INTO Matches(
@@ -204,7 +181,8 @@ class GameDatabase:
 						p2name,
 						p1type,
 						p2type,
-						winner
+						winner,
+						moves
 					)
 					VALUES(
 						:start,
@@ -213,7 +191,8 @@ class GameDatabase:
 						:p2name,
 						:p1type,
 						:p2type,
-						:winner
+						:winner,
+						:moves
 					);
 				""",
 				{
@@ -223,35 +202,10 @@ class GameDatabase:
 					"p2name": match.player2.name,
 					"p1type": match.player1.type,
 					"p2type": match.player2.type,
-					"winner": str(match.winner)
+					"winner": str(match.winner),
+					"moves": "".join(map(str,match.moves))
 				}
 			)
-			connection.executemany(
-				f"""
-					INSERT INTO Moves(
-						turn,
-						start,
-						end,
-						column
-					)
-					VALUES(
-						:turn,
-						:start,
-						:end,
-						:column
-					);
-				""",
-				[
-					{
-						"turn": turn,
-						"start": match.start,
-						"end": match.end,
-						"column": column
-					}
-					for turn, column in enumerate(match.moves)
-				]
-			)
-
 			connection.commit()
 			return True
 		except (sqlite3.OperationalError, sqlite3.DatabaseError, sqlite3.DatabaseError):
@@ -282,20 +236,10 @@ class GameDatabase:
 					p1type CHAR(1) NOT NULL,
 					p2type CHAR(1) NOT NULL,
 					winner CHAR(1) NOT NULL,
+					moves VARCHAR(42) NOT NULL,
 					PRIMARY KEY(start, end)
 					FOREIGN KEY(p1name) REFERENCES Player(player)
 					FOREIGN KEY(p2name) REFERENCES Player(player)
-				);
-			""")
-			connection.execute("""
-				CREATE TABLE Moves(
-					turn INTEGER NOT NULL,
-					start DATETIME NOT NULL,
-					end DATETIME NOT NULL,
-					column INTEGER NOT NULL,
-					PRIMARY KEY(turn, start, end)
-					FOREIGN KEY(start) REFERENCES Matches(start)
-					FOREIGN KEY(end) REFERENCES Matches(end)
 				);
 			""")
 			return True
