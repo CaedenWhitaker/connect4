@@ -50,21 +50,17 @@ class MainMenuController:
 
 	def _make_local_menu(self, theme):
 		valid_chars = list(string.ascii_letters + string.digits)
-		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=4, rows=3)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
-		self.local_menu.add.selector("Player 1", [(" Human ",), ("Computer",)], 0, onchange=self.set_player1)
-		self.local_menu.add.selector("Player 2", [(" Human ",), ("Computer",)], 0, onchange=self.set_player2)
+		min_col_width = int(300*self.scale)
+		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=2, rows=3, column_min_width=(min_col_width,min_col_width))
+		self.local_menu.add.selector("Player 1", [("Human",), ("Computer",)], 0, onchange=self.set_player1)
+		self.local_menu.add.selector("Player 2", [("Human",), ("Computer",)], 0, onchange=self.set_player2)
 		self.local_menu.add.button("Back", action=pygame_menu.events.BACK)
 		self.p1_name_widget = self.local_menu.add.text_input("Id:", "AAA", onchange=self.p1_change_name,
 																maxchar=3, valid_chars=valid_chars)
 		self.p2_name_widget = self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
 																maxchar=3, valid_chars=valid_chars)
 		self.local_menu.add.button("Confirm", action=self.close)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
-		self.local_menu.add.horizontal_margin(50 * self.scale)
+
 		for widget in self.local_menu.get_widgets():
 			widget.set_onselect(self.update_names)
 			widget.set_onmouseover(self.update_names)
@@ -77,7 +73,7 @@ class MainMenuController:
 	def _make_replay_menu(self, theme):
 
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
-		self.replay_menu.add.dropselect("Game:", [("Item" + str(x), {}) for x in range(100)], 0, onchange=self.update_info)
+		self.replay_menu.add.dropselect("Game:", [("Item" + str(x), {}) for x in range(2)], 0, onchange=self.update_info)
 		self.replay_menu.add.button("Confirm", action=self.close_replay)
 
 

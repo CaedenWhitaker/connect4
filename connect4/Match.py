@@ -134,6 +134,10 @@ class Match(VisualElement, MouseListener):
 				#if self.board.over: #save game still if leaving when finished
 			if ret_val == "undo":
 				self.undo()
+			if ret_val == "save":
+				#save and quit
+				#TODO save
+				self.quit = True
 		
 		pygame.display.update()
 		self.clock.tick(Match.framerate)
