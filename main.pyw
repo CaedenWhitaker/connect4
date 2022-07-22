@@ -25,8 +25,8 @@ def main():
 		mc = MainMenuController(scale)
 		mc.mainloop(temp_window)
 
-		player1 = HumanPlayer() if mc.player1 == 0 else AIPlayer()
-		player2 = HumanPlayer() if mc.player2 == 0 else AIPlayer()
+		player1 = HumanPlayer(mc.player1_name) if mc.player1 == 0 else AIPlayer("CP1")
+		player2 = HumanPlayer(mc.player2_name) if mc.player2 == 0 else AIPlayer("CP2")
 
 		match = Match(player1, player2, Board(), scale=scale)
 		running = match.mainloop()

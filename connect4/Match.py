@@ -99,11 +99,11 @@ class Match(VisualElement, MouseListener):
 		if col is not None:
 			self.board.move(col, self.turn)
 			self.moves.append(col)
+			win = self.board.checkWin(self.turn)
 			self.turn = not self.turn
-			win = self.board.checkWin(not self.turn)
 			if win != 0:
 				if self.turn is not None:
-					self.winner = int(self.turn) + 1
+					self.winner = win
 					self.end = datetime.datetime.now()
 				self.turn = None
 				MouseListener.clear()
