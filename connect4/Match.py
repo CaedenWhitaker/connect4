@@ -242,8 +242,8 @@ class Match(VisualElement, MouseListener):
 					self.open_game_menu = True
 					continue
 			#if the menu button was clicked, the code will not get this far
-			if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
-				self.running = False
+			#if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
+				#self.running = False
 	
 	def mainloop(self):
 		self.running = True
@@ -255,7 +255,6 @@ class Match(VisualElement, MouseListener):
 				events = pygame.event.get()
 				MouseListener.listen(events)
 				if not self.board.over:
-					print("In mainloop else", self.turn, self.player1.turn, self.player2.turn, self.board.over)
 					self.doTurn()
 				self.render()
 				#winning banner
