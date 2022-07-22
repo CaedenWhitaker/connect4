@@ -2,9 +2,11 @@ from connect4.Board import Board
 
 class Player:
 
-	def __init__(self):
+	def __init__(self, name):
+		self.name = name
 		self.turn = None
 		self.order = None
+		self.type = ""
 		self.potentialMove = None
 
 	def setTurn(self, turn):

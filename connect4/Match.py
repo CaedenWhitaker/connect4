@@ -1,4 +1,3 @@
-from platform import python_branch
 from connect4.Constants import Constants
 from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
@@ -7,6 +6,7 @@ from connect4.Board import Board
 from connect4.GameMenuController import GameMenuController
 import math
 import pygame
+import datetime
 
 
 class Match(VisualElement, MouseListener):
@@ -42,7 +42,9 @@ class Match(VisualElement, MouseListener):
 		self.player2.setOrder(True)
 		self.player2.setTurn(self.turn)
 		self.board = board
-		self.winning_player = None
+		self.winner = 0
+		self.start = datetime.datetime.now()
+		self.end = datetime.datetime.min
 		self.running = False
 
 		self.register()
@@ -96,16 +98,17 @@ class Match(VisualElement, MouseListener):
 		
 		if col is not None:
 			self.board.move(col, self.turn)
+			self.moves.append(col)
+			win = self.board.checkWin(self.turn)
 			self.turn = not self.turn
-			win, player = self.board.checkWin(not self.turn)
-			if win:
-				if self.turn != None:
-					self.winning_player = player
-				self.turn = None#this messes with telling who won
+			if win != 0:
+				if self.turn is not None:
+					self.winner = win
+					self.end = datetime.datetime.now()
+				self.turn = None
+				MouseListener.clear()
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
-			
-
 
 	def render(self):
 		self.renderBackground()
@@ -116,11 +119,14 @@ class Match(VisualElement, MouseListener):
 			self.renderInvalidPrompt()
 		
 		if self.board.over:
-			if self.winning_player == False:
-				self.surface.blit(self.p1win, (10,0))
-			if self.winning_player == True:
-				self.surface.blit(self.p2win, (10,0))
-			if self.winning_player is None:
+			font = pygame.font.SysFont(None, 175)
+			if self.winner == 1:
+				text_obj = font.render("Player 1 Wins!", True, (255,0,0))
+				self.surface.blit(text_obj, (10,0))
+			if self.winner == 2:
+				text_obj = font.render("Player 2 Wins!", True, (0,0,255))
+				self.surface.blit(text_obj, (10,0))
+			if self.winner == 3:
 				self.surface.blit(self.tieWin, (10,0))
 		
 		self.renderMenuButton()
@@ -237,7 +243,7 @@ class Match(VisualElement, MouseListener):
 			self.player1.setPotentialMove(self.potentialMove)
 	
 	def xToCol(self, x: int):
-		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth + 1))
+		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth))
 	
 	def onClick(self):
 		for event in MouseListener.events:

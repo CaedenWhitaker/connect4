@@ -5,11 +5,12 @@ import pygame
 
 class HumanPlayer(Player, MouseListener):
 
-	def __init__(self) -> None:
+	def __init__(self, name) -> None:
+		super().__init__(name)
+		self.type = "H"
 		self.heldPiece = 0
 		self.selected = False
 		self.register()
-		super().__init__()
 
 	def onClick(self):
 		"""

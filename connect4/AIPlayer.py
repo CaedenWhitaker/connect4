@@ -4,11 +4,12 @@ import random
 
 
 class AIPlayer(Player):
-	def __init__(self):
+	def __init__(self, name):
 		"""
 
 		"""
-		super().__init__()
+		super().__init__(name)
+		self.type = "C"
 		self.heldPiece = 0.5
 		self.direction = 1
 	
@@ -16,7 +17,7 @@ class AIPlayer(Player):
 		"""
 		This method decides what the next move is for the AI
 		@param state: the board for the current game
-		@returns: the olumn index to play on
+		@returns: the column index to play on
 		@type: int
 		"""
 		if random.random() <= 0.005:
