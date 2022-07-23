@@ -17,6 +17,8 @@ class MainMenuController:
 		self.player2 = 0
 		self.player1_name = "AAA"
 		self.player2_name = "AAA"
+		self.cp1_diff = 1
+		self.cp2_diff = 1
 		self.loop = False
 		self.x1 = 100 * self.scale
 		self.x2 = 400 * self.scale
@@ -46,7 +48,7 @@ class MainMenuController:
 	def _make_main_menu(self, theme):
 		self.main_menu = pygame_menu.Menu("Connect4", *self.size, theme=theme)
 		self.main_menu.add.button("Local", action=self.open_local_menu)
-		print(len(self.games))
+		
 		if len(self.games) > 0:
 			self.main_menu.add.button("Replay", action=self.open_replay_menu)
 		self.main_menu.add.button("Exit", action=pygame_menu.events.EXIT)
@@ -69,13 +71,15 @@ class MainMenuController:
 		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p1_change_name,
 										maxchar=3, valid_chars=valid_chars, textinput_id="p1name")
 		
-		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1, onchange=None, rangeslider_id="cp1r")
+		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1,
+											onchange=self.cp1_change_diff, rangeslider_id="cp1r")
 		self.local_menu.get_widget("cp1r").hide()
 		self.local_menu.add.none_widget("none1r")
 
 		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
 										maxchar=3, valid_chars=valid_chars, textinput_id="p2name")
-		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1, onchange=None, rangeslider_id="cp2r")
+		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1,
+											onchange=self.cp2_change_diff, rangeslider_id="cp2r")
 		self.local_menu.get_widget("cp2r").hide()
 		self.local_menu.add.none_widget("none2r")
 
@@ -88,14 +92,14 @@ class MainMenuController:
 		
 	def process_db_info(self):
 		for game in GameDatabase().getMatches():
-			print(game.keys())
 			self.games.append((game["start"], game))
 
 	
 	def _make_replay_menu(self):
 
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
-		self.replay_menu.add.dropselect("Game:", self.games, 0, onchange=self.update_info)
+		if len(self.games) > 0:
+			self.replay_menu.add.dropselect("Game:", self.games[::-1], (len(self.games)-1), onchange=self.update_info)
 		self.replay_menu.add.button("Confirm", action=self.close_replay)
 
 
@@ -158,12 +162,18 @@ class MainMenuController:
 		value = value[:3]
 		self.player2_name = value.upper()
 	
+	def cp1_change_diff(self, diff_lvl):
+		self.cp1_diff = diff_lvl
+	
+	def cp2_change_diff(self, diff_lvl):
+		self.cp2_diff = diff_lvl
+	
 	def open_local_menu(self):
 		self.main_menu._open(self.local_menu)
 
 	def open_replay_menu(self):
 		self.main_menu._open(self.replay_menu)
-		self.update_info(0, self.games[0][1])
+		self.update_info(0, self.games[-1][1])
 	
 	def _draw_info_layout(self):
 		p1_label_text = "Player 1:"
@@ -171,8 +181,8 @@ class MainMenuController:
 		moves_label_text = "Moves:"
 		win_type_text = "Winner:"
 		
-		p1_label = self.font.render(p1_label_text, True, (255,255,255))
-		p2_label = self.font.render(p2_label_text, True, (255,255,255))
+		p1_label = self.font.render(p1_label_text, True, (255,0,0))
+		p2_label = self.font.render(p2_label_text, True, (0,0,255))
 		moves_label = self.font.render(moves_label_text, True, (255,255,255))
 		win_type_label = self.font.render(win_type_text, True, (255,255,255))
 		self.info_surf.blit(p1_label, (self.x1,50 * self.scale))
@@ -186,39 +196,40 @@ class MainMenuController:
 		self._draw_info_layout()
 		kPlayer1Type = "p1type"
 		kPlayer2Type = "p2type"
-		kPlayer1Name = "plname"
+		kPlayer1Name = "p1name"
 		kPlayer2Name = "p2name"
-		kGameStartStamp = "start"
-		kGameEndStamp = "end"
 		kNumberOfMoves = "moves"
 		kWinType = "winner"
 		winner_label_size = self.font.size("Winner: ")
-		print(info)
 		
-		p1_name_label = self.font.render(info[kPlayer1Name], True, (255,0,0))
-		
+
 		if info[kPlayer1Type] == "H":
+			p1_name_label = self.font.render(info[kPlayer1Name], True, (255,0,0))
 			p1_type_label = self.font.render("Human", True, (255,0,0))
-		if info[kPlayer1Name] == "C":
-			p1_type_label = self.font.render("Computer", True, (255,0,0))
+		if info[kPlayer1Type] == "C":
+			diff = info[kPlayer1Name][-1]
+			p1_name_label = self.font.render(info[kPlayer1Name][:-1] + "1", True, (255,0,0))
+			p1_type_label = self.font.render("Computer: " + diff, True, (255,0,0))
 		
-		p2_name_label = self.font.render(info[kPlayer2Name], True, (0,0,255))
 		
 		if info[kPlayer2Type] == "H":
+			p2_name_label = self.font.render(info[kPlayer2Name], True, (0,0,255))
 			p2_type_label = self.font.render("Human", True, (0,0,255))
-		if info[kPlayer2Name] == "C":
-			p2_type_label = self.font.render("Computer", True, (0,0,255))
+		if info[kPlayer2Type] == "C":
+			diff = info[kPlayer2Name][-1]
+			p2_name_label = self.font.render(info[kPlayer2Name][:-1] + "2", True, (0,0,255))
+			p2_type_label = self.font.render("Computer: " + diff, True, (0,0,255))
 		
 		moves_label = self.font.render(str(len(info[kNumberOfMoves])), True, (255,255,255))
 		if info[kWinType] == 0:
 			winner_label = self.font.render("Unfinished", True, (255,255,255))
 		if info[kWinType] == 1:
-			winner_label = self.font.render("Player 1", True, (255,0,0))
+			winner_label = p1_name_label
 		if info[kWinType] == 2:
-			winner_label = self.font.render("Player 2", True, (0,0,255))
+			winner_label = p2_name_label
 		if info[kWinType] == 3:
 			winner_label = self.font.render("Tie", True, (255,255,255))
-
+		
 		start_y = 100 
 		self.info_surf.blit(p1_name_label, (self.x1, start_y * self.scale))
 		self.info_surf.blit(p1_type_label, (self.x1, (start_y + 50) * self.scale))
@@ -247,6 +258,10 @@ class MainMenuController:
 					window.blit(self.info_surf, (0 * self.scale, 250 * self.scale))
 				pygame.display.update()
 		self.games = None
+		if self.player1 == 1:
+			self.player1_name = "CP" + str(self.cp1_diff)
+		if self.player2 == 1:
+			self.player2_name = "CP" + str(self.cp2_diff)
 			
 
 
