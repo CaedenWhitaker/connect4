@@ -71,10 +71,9 @@ class Match(VisualElement, MouseListener):
 		self.game_menu = GameMenuController(self.scale)
 		self.open_game_menu = False
 		self.quit = False
+		print(self.player1.type, self.player2.type)
 
-	
-
-	def undo(self):
+	def undo_humans(self):
 		undone = self.board.undo()
 		if not undone:#if no pieces are on the board, do nothing
 			return
@@ -88,6 +87,26 @@ class Match(VisualElement, MouseListener):
 				self.turn = True
 		self.player1.setTurn(self.turn)
 		self.player2.setTurn(self.turn)
+
+	def undo_one_com(self):
+		self.undo_humans()
+		self.undo_humans()
+
+	def undo_two_comp(self):
+		self.undo_one_com()
+
+	def undo(self):
+		if self.player1.type == "H" and self.player2.type == "H":
+			self.undo_humans()
+			return
+		
+		if self.player1.type == "C" and self.player2.type == "C":
+			print("Undo is unsupported when 2 AI are playing")
+			return
+		
+		if self.player1.type == "C" or self.player2.type == "C":
+			self.undo_one_com()
+			return
 
 	def doTurn(self):
 		"""
@@ -108,7 +127,6 @@ class Match(VisualElement, MouseListener):
 					self.winner = win
 					self.end = datetime.datetime.now()
 				self.turn = None
-				#MouseListener.clear()
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
 
