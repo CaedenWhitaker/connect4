@@ -50,12 +50,12 @@ class Board:
 		Returns:
 			A bool; whether the moving player has won in the current board state.
 		"""
-		if self.checkFull():
-			self.over = True
-			return 3
 		if self.checkWinAux(turn):
 			self.over = True
 			return int(turn) + 1
+		if self.checkFull():
+			self.over = True
+			return 3
 		return 0
 	
 	def checkFull(self):
