@@ -1,4 +1,6 @@
+from sqlalchemy import true
 from connect4.Constants import Constants
+from connect4.GameDatabase import GameDatabase
 from connect4.MouseListener import MouseListener
 from connect4.VisualElement import VisualElement
 from connect4.Player import Player
@@ -80,8 +82,8 @@ class Match(VisualElement, MouseListener):
 			self.turn = not self.turn
 		if self.board.over:
 			self.board.over = False
-			if self.winning_player is not None:
-				self.turn = self.winning_player
+			if self.winner != 3:
+				self.turn = self.winner == 2
 			else:
 				self.turn = True
 		self.player1.setTurn(self.turn)
@@ -106,7 +108,7 @@ class Match(VisualElement, MouseListener):
 					self.winner = win
 					self.end = datetime.datetime.now()
 				self.turn = None
-				MouseListener.clear()
+				#MouseListener.clear()
 			self.player1.setTurn(self.turn)
 			self.player2.setTurn(self.turn)
 
@@ -142,7 +144,7 @@ class Match(VisualElement, MouseListener):
 				self.undo()
 			if ret_val == "save":
 				#save and quit
-				#TODO save
+				GameDatabase().save(self)
 				self.quit = True
 		
 		pygame.display.update()
@@ -254,12 +256,19 @@ class Match(VisualElement, MouseListener):
 			#if the menu button was clicked, the code will not get this far
 			#if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
 				#self.running = False
+	def deregister_listeners(self):
+		if hasattr(self.player1, "deregister"):
+			self.player1.deregister()
+		if hasattr(self.player2, "deregister"):
+			self.player2.deregister()
+		self.deregister()
 	
 	def mainloop(self):
 		self.running = True
 		while self.running and not self.quit:
 			if pygame.event.peek(eventtype=pygame.QUIT):
 				self.running = False
+				self.deregister_listeners()
 				return False
 			else:
 				events = pygame.event.get()
@@ -267,5 +276,5 @@ class Match(VisualElement, MouseListener):
 				if not self.board.over:
 					self.doTurn()
 				self.render()
-				#winning banner
+		self.deregister_listeners()
 		return True

@@ -5,6 +5,8 @@ import pygame_menu.events
 from connect4.Constants import Constants
 import string
 
+from connect4.GameDatabase import GameDatabase
+
 
 class MainMenuController:
 	
@@ -13,8 +15,6 @@ class MainMenuController:
 		self.scale = scale
 		self.player1 = 0
 		self.player2 = 0
-		self.p1_name_widget = None
-		self.p2_name_widget = None
 		self.player1_name = "AAA"
 		self.player2_name = "AAA"
 		self.loop = False
@@ -24,7 +24,9 @@ class MainMenuController:
 		self.font = pygame.font.SysFont(None, int(45 * self.scale))
 		theme = pygame_menu.Theme(**self.scale_theme(Constants.get_main_theme()))
 		#local menu MUST be made before the main menu
-		self._make_replay_menu(None)
+		self.games = list()
+		self.process_db_info()
+		self._make_replay_menu()
 		self._make_local_menu(None)
 		self._make_main_menu(theme)
 
@@ -44,55 +46,85 @@ class MainMenuController:
 	def _make_main_menu(self, theme):
 		self.main_menu = pygame_menu.Menu("Connect4", *self.size, theme=theme)
 		self.main_menu.add.button("Local", action=self.open_local_menu)
-		#if there are games
-		self.main_menu.add.button("Replay", action=self.open_replay_menu)
+		print(len(self.games))
+		if len(self.games) > 0:
+			self.main_menu.add.button("Replay", action=self.open_replay_menu)
 		self.main_menu.add.button("Exit", action=pygame_menu.events.EXIT)
 
 	def _make_local_menu(self, theme):
 		valid_chars = list(string.ascii_letters + string.digits)
 		min_col_width = int(300*self.scale)
-		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=2, rows=3, column_min_width=(min_col_width,min_col_width))
+		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=2, rows=5,
+											column_min_width=(min_col_width,min_col_width))
+
 		self.local_menu.add.selector("Player 1", [("Human",), ("Computer",)], 0, onchange=self.set_player1)
+		self.local_menu.add.vertical_margin(65, margin_id="vm1")
+		self.local_menu.get_widget("vm1").hide()
+		self.local_menu.add.none_widget("none1vm")
 		self.local_menu.add.selector("Player 2", [("Human",), ("Computer",)], 0, onchange=self.set_player2)
+		self.local_menu.add.vertical_margin(65, margin_id="vm2")
+		self.local_menu.get_widget("vm2").hide()
+		self.local_menu.add.none_widget("none2vm")
 		self.local_menu.add.button("Back", action=pygame_menu.events.BACK)
-		self.p1_name_widget = self.local_menu.add.text_input("Id:", "AAA", onchange=self.p1_change_name,
-																maxchar=3, valid_chars=valid_chars)
-		self.p2_name_widget = self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
-																maxchar=3, valid_chars=valid_chars)
+		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p1_change_name,
+										maxchar=3, valid_chars=valid_chars, textinput_id="p1name")
+		
+		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1, onchange=None, rangeslider_id="cp1r")
+		self.local_menu.get_widget("cp1r").hide()
+		self.local_menu.add.none_widget("none1r")
+
+		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
+										maxchar=3, valid_chars=valid_chars, textinput_id="p2name")
+		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1, onchange=None, rangeslider_id="cp2r")
+		self.local_menu.get_widget("cp2r").hide()
+		self.local_menu.add.none_widget("none2r")
+
 		self.local_menu.add.button("Confirm", action=self.close)
 
 		for widget in self.local_menu.get_widgets():
 			widget.set_onselect(self.update_names)
 			widget.set_onmouseover(self.update_names)
 			widget.set_onmouseleave(self.update_names)
+		
+	def process_db_info(self):
+		for game in GameDatabase().getMatches():
+			print(game.keys())
+			self.games.append((game["start"], game))
 
-	def load_database(self, db):
-		#do stuff
-		pass
 	
-	def _make_replay_menu(self, theme):
+	def _make_replay_menu(self):
 
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
-		self.replay_menu.add.dropselect("Game:", [("Item" + str(x), {}) for x in range(2)], 0, onchange=self.update_info)
+		self.replay_menu.add.dropselect("Game:", self.games, 0, onchange=self.update_info)
 		self.replay_menu.add.button("Confirm", action=self.close_replay)
 
 
 	def update_names(self):
 		if self.player1 == 0:
-			self.p1_name_widget.set_value(self.player1_name)
+			self.local_menu.get_widget("p1name").set_value(self.player1_name)
 		else:
-			self.p1_name_widget.set_value("CP1")
+			self.local_menu.get_widget("p1name").set_value("CP1")
 		if self.player2 == 0:
-			self.p2_name_widget.set_value(self.player2_name)
+			self.local_menu.get_widget("p2name").set_value(self.player2_name)
 		else:
-			self.p2_name_widget.set_value("CP2")
+			self.local_menu.get_widget("p2name").set_value("CP2")
 	
 	def set_player1(self, value:tuple):
 		self.player1 = value[1]
 		if self.player1 == 1:
-			self.p1_name_widget.set_value("CP1")
+			self.local_menu.get_widget("p1name").set_value("CP1")
+			self.local_menu.get_widget("none1vm").hide()
+			self.local_menu.get_widget("none1r").hide()
+			self.local_menu.get_widget("vm1").show()
+			self.local_menu.get_widget("cp1r").show()
+			
 		if self.player1 == 0:
-			self.p1_name_widget.set_value(self.player1_name)
+			self.local_menu.get_widget("p1name").set_value(self.player1_name)
+			self.local_menu.get_widget("vm1").hide()
+			self.local_menu.get_widget("cp1r").hide()
+			self.local_menu.get_widget("none1vm").show()
+			self.local_menu.get_widget("none1r").show()
+			
 	
 	def p1_change_name(self, value:str):
 		if self.player1 == 1:
@@ -105,9 +137,18 @@ class MainMenuController:
 	def set_player2(self, value:tuple):
 		self.player2 = value[1]
 		if self.player2 == 1:
-			self.p2_name_widget.set_value("CP2")
+			self.local_menu.get_widget("p2name").set_value("CP2")
+			self.local_menu.get_widget("none2vm").hide()
+			self.local_menu.get_widget("none2r").hide()
+			self.local_menu.get_widget("cp2r").show()
+			self.local_menu.get_widget("vm2").show()
+			
 		if self.player2 == 0:
-			self.p2_name_widget.set_value(self.player2_name)
+			self.local_menu.get_widget("p2name").set_value(self.player2_name)
+			self.local_menu.get_widget("cp2r").hide()
+			self.local_menu.get_widget("vm2").hide()
+			self.local_menu.get_widget("none2vm").show()
+			self.local_menu.get_widget("none2r").show()
 	
 	def p2_change_name(self, value:str):
 		if self.player2 == 1:
@@ -122,7 +163,7 @@ class MainMenuController:
 
 	def open_replay_menu(self):
 		self.main_menu._open(self.replay_menu)
-		self.update_info(0, {})
+		self.update_info(0, self.games[0][1])
 	
 	def _draw_info_layout(self):
 		p1_label_text = "Player 1:"
@@ -143,23 +184,40 @@ class MainMenuController:
 	def update_info(self, something, info:dict):
 		self.info_surf.fill((0,0,0))
 		self._draw_info_layout()
-		kPlayer1Type = "p1_type"
-		kPlayer2Type = "p2_type"
-		kPlayer1Name = "p1_name"
-		kPlayer2Name = "p2_name"
-		kGameDateStamp = "datestamp"
-		kNumberOfMoves = "num_moves"
-		kWinType = "win_type"
+		kPlayer1Type = "p1type"
+		kPlayer2Type = "p2type"
+		kPlayer1Name = "plname"
+		kPlayer2Name = "p2name"
+		kGameStartStamp = "start"
+		kGameEndStamp = "end"
+		kNumberOfMoves = "moves"
+		kWinType = "winner"
 		winner_label_size = self.font.size("Winner: ")
-		print(something)
 		print(info)
 		
-		p1_name_label = self.font.render("AJR", True, (255,255,255))
-		p1_type_label = self.font.render("Computer", True, (255,255,255))
-		p2_name_label = self.font.render("CGW", True, (255,255,255))
-		p2_type_label = self.font.render("Human", True, (255,255,255))
-		moves_label = self.font.render("42", True, (255,255,255))
-		winner_label = self.font.render("Tie", True, (255,255,255))
+		p1_name_label = self.font.render(info[kPlayer1Name], True, (255,0,0))
+		
+		if info[kPlayer1Type] == "H":
+			p1_type_label = self.font.render("Human", True, (255,0,0))
+		if info[kPlayer1Name] == "C":
+			p1_type_label = self.font.render("Computer", True, (255,0,0))
+		
+		p2_name_label = self.font.render(info[kPlayer2Name], True, (0,0,255))
+		
+		if info[kPlayer2Type] == "H":
+			p2_type_label = self.font.render("Human", True, (0,0,255))
+		if info[kPlayer2Name] == "C":
+			p2_type_label = self.font.render("Computer", True, (0,0,255))
+		
+		moves_label = self.font.render(str(len(info[kNumberOfMoves])), True, (255,255,255))
+		if info[kWinType] == 0:
+			winner_label = self.font.render("Unfinished", True, (255,255,255))
+		if info[kWinType] == 1:
+			winner_label = self.font.render("Player 1", True, (255,0,0))
+		if info[kWinType] == 2:
+			winner_label = self.font.render("Player 2", True, (0,0,255))
+		if info[kWinType] == 3:
+			winner_label = self.font.render("Tie", True, (255,255,255))
 
 		start_y = 100 
 		self.info_surf.blit(p1_name_label, (self.x1, start_y * self.scale))
@@ -188,6 +246,7 @@ class MainMenuController:
 				if self.main_menu._current is self.replay_menu:
 					window.blit(self.info_surf, (0 * self.scale, 250 * self.scale))
 				pygame.display.update()
+		self.games = None
 			
 
 
