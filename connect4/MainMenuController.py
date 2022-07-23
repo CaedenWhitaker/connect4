@@ -19,6 +19,8 @@ class MainMenuController:
 		self.player2_name = "AAA"
 		self.cp1_diff = 1
 		self.cp2_diff = 1
+		self.replay_info = None
+		self.replay_game = False
 		self.loop = False
 		self.x1 = 100 * self.scale
 		self.x2 = 400 * self.scale
@@ -100,7 +102,7 @@ class MainMenuController:
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
 		if len(self.games) > 0:
 			self.replay_menu.add.dropselect("Game:", self.games[::-1], (len(self.games)-1), onchange=self.update_info)
-		self.replay_menu.add.button("Confirm", action=self.close_replay)
+		self.replay_menu.add.button("Confirm", action=self.close)
 
 
 	def update_names(self):
@@ -169,9 +171,11 @@ class MainMenuController:
 		self.cp2_diff = diff_lvl
 	
 	def open_local_menu(self):
+		self.replay_game = False
 		self.main_menu._open(self.local_menu)
 
 	def open_replay_menu(self):
+		self.replay_game = True
 		self.main_menu._open(self.replay_menu)
 		self.update_info(0, self.games[-1][1])
 	
@@ -194,6 +198,7 @@ class MainMenuController:
 	def update_info(self, something, info:dict):
 		self.info_surf.fill((0,0,0))
 		self._draw_info_layout()
+		self.replay_info = info
 		kPlayer1Type = "p1type"
 		kPlayer2Type = "p2type"
 		kPlayer1Name = "p1name"
@@ -242,9 +247,6 @@ class MainMenuController:
 
 	def close(self):
 		self.loop = False
-	
-	def close_replay(self):
-		pass
 	
 	
 	def mainloop(self, window:pygame.Surface):

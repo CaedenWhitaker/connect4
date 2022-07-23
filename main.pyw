@@ -1,6 +1,7 @@
 from connect4.AIPlayer import AIPlayer
 from connect4.HumanPlayer import HumanPlayer
 from connect4.Match import Match
+from connect4.ReplayMatch import ReplayMatch
 from connect4.Board import Board
 import pygame
 import ctypes
@@ -25,10 +26,13 @@ def main():
 		mc = MainMenuController(scale)
 		mc.mainloop(temp_window)
 
-		player1 = HumanPlayer(mc.player1_name) if mc.player1 == 0 else AIPlayer(mc.player1_name)
-		player2 = HumanPlayer(mc.player2_name) if mc.player2 == 0 else AIPlayer(mc.player2_name)
-
-		match = Match(player1, player2, Board(), scale=scale)
+		if mc.replay_game:
+			match = ReplayMatch(Board(), mc.replay_info, scale=scale)
+		else:
+			player1 = HumanPlayer(mc.player1_name) if mc.player1 == 0 else AIPlayer(mc.player1_name)
+			player2 = HumanPlayer(mc.player2_name) if mc.player2 == 0 else AIPlayer(mc.player2_name)
+			match = Match(player1, player2, Board(), scale=scale)
+		
 		running = match.mainloop()
 				
 			
