@@ -56,8 +56,16 @@ class Match(VisualElement, MouseListener):
 		self.pieceRadius = 0.8 * self.slotRadius
 
 		self.font = pygame.font.SysFont(None, math.floor(2 * self.pieceRadius * self.scale))
-		self.p1Win = self.font.render(f"Player 1, {self.player1.name}, Wins!", True, Match.player1Color)
-		self.p2Win = self.font.render(f"Player 2, {self.player2.name}, Wins!", True, Match.player2Color)
+		if self.player1.type == "C":
+			self.p1Win = self.font.render(f"CPU Wins!", True, Match.player1Color)
+		else: 
+			self.p1Win = self.font.render(f"{self.player1.name} Wins!", True, Match.player1Color)
+		
+		if self.player2.type == "C":
+			self.p2Win = self.font.render(f"CPU Wins!", True, Match.player2Color)
+		else: 
+			self.p2Win = self.font.render(f"{self.player2.name} Wins!", True, Match.player2Color)
+		
 		self.tieWin = self.font.render("Tie!", True, (255,255,255))
 
 		self.font_small = pygame.font.SysFont(None, math.floor(40 * self.scale))
@@ -70,7 +78,6 @@ class Match(VisualElement, MouseListener):
 		self.game_menu = GameMenuController(self.scale)
 		self.open_game_menu = False
 		self.quit = False
-		print(self.player1.type, self.player2.type)
 
 	def undo_humans(self):
 		undone = self.board.undo()
