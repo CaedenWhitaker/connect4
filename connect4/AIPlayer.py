@@ -1,4 +1,3 @@
-from scipy import rand
 from connect4.Player import Player
 from connect4.Board import Board
 from connect4.PolicyNode import PolicyNode

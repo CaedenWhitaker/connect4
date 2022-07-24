@@ -1,9 +1,7 @@
-from faulthandler import is_enabled
 import pygame
 import pygame_menu
 import pygame_menu.locals
 import pygame_menu.events
-from connect4.Constants import Constants
 
 
 class GameMenuController:
