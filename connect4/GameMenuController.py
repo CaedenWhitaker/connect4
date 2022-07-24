@@ -6,7 +6,7 @@ import pygame_menu.events
 
 class GameMenuController:
 
-	def __init__(self, scale, can_save_game=False):
+	def __init__(self, scale, can_save_game=True):
 		self.scale = scale
 		self.can_save_game = can_save_game
 		self.size = (400*self.scale, 600*self.scale)
