@@ -209,11 +209,11 @@ class MainMenuController:
 		
 
 		if info[kPlayer1Type] == "H":
-			p1_name_label = self.font.render(info[kPlayer1Name], True, (255,0,0))
+			p1_name_label = self.font.render("CPU", True, (255,0,0))
 			p1_type_label = self.font.render("Human", True, (255,0,0))
 		if info[kPlayer1Type] == "C":
 			diff = info[kPlayer1Name][-1]
-			p1_name_label = self.font.render(info[kPlayer1Name][:-1] + "1", True, (255,0,0))
+			p1_name_label = self.font.render("CPU", True, (255,0,0))
 			p1_type_label = self.font.render("Computer: " + diff, True, (255,0,0))
 		
 		
