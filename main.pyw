@@ -29,8 +29,8 @@ def main():
 		if mc.replay_game:
 			match = ReplayMatch(Board(), mc.replay_info, scale=scale)
 		else:
-			player1 = HumanPlayer(mc.player1_name) if mc.player1 == 0 else AIPlayer(mc.player1_name, 9)
-			player2 = HumanPlayer(mc.player2_name) if mc.player2 == 0 else AIPlayer(mc.player2_name, 1)
+			player1 = HumanPlayer(mc.player1_name) if mc.player1 == 0 else AIPlayer(mc.player1_name, mc.cp1_diff)
+			player2 = HumanPlayer(mc.player2_name) if mc.player2 == 0 else AIPlayer(mc.player2_name, mc.cp2_diff)
 			match = Match(player1, player2, Board(), scale=scale)
 		
 		running = match.mainloop()

@@ -15,8 +15,8 @@ class MainMenuController:
 		self.scale = scale
 		self.player1 = 0
 		self.player2 = 0
-		self.player1_name = "AAA"
-		self.player2_name = "AAA"
+		self.player1_name = "HP1"
+		self.player2_name = "HP2"
 		self.cp1_diff = 1
 		self.cp2_diff = 1
 		self.replay_info = None
@@ -70,17 +70,17 @@ class MainMenuController:
 		self.local_menu.get_widget("vm2").hide()
 		self.local_menu.add.none_widget("none2vm")
 		self.local_menu.add.button("Back", action=pygame_menu.events.BACK)
-		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p1_change_name,
+		self.local_menu.add.text_input("Id:", "HP1", onchange=self.p1_change_name,
 										maxchar=3, valid_chars=valid_chars, textinput_id="p1name")
 		
-		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1,
+		self.local_menu.add.range_slider("Difficulty:", 1, [x+1 for x in range(9)], 1,
 											onchange=self.cp1_change_diff, rangeslider_id="cp1r")
 		self.local_menu.get_widget("cp1r").hide()
 		self.local_menu.add.none_widget("none1r")
 
-		self.local_menu.add.text_input("Id:", "AAA", onchange=self.p2_change_name,
+		self.local_menu.add.text_input("Id:", "HP2", onchange=self.p2_change_name,
 										maxchar=3, valid_chars=valid_chars, textinput_id="p2name")
-		self.local_menu.add.range_slider("Difficutly:", 1, [x+1 for x in range(9)], 1,
+		self.local_menu.add.range_slider("Difficulty:", 1, [x+1 for x in range(9)], 1,
 											onchange=self.cp2_change_diff, rangeslider_id="cp2r")
 		self.local_menu.get_widget("cp2r").hide()
 		self.local_menu.add.none_widget("none2r")
