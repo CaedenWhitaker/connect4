@@ -37,7 +37,7 @@ class GameDatabase:
 	def getMatches(self):
 		self.errors = self.errors or not self.loadMatches()
 		self.matches = [
-			dict(zip(("start","end","plname","p2name","p1type","p2type","winner","moves"), row))
+			dict(zip(("start","end","p1name","p2name","p1type","p2type","winner","moves"), row))
 			for row in self.matches
 		]
 		for match in self.matches:
