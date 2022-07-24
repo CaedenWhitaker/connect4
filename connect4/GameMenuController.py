@@ -6,9 +6,10 @@ import pygame_menu.events
 
 class GameMenuController:
 
-	def __init__(self, scale):
+	def __init__(self, scale, can_save_game=False):
 		self.scale = scale
-		self.size = (400, 600)
+		self.can_save_game = can_save_game
+		self.size = (400*self.scale, 600*self.scale)
 		self.looping = False
 		self._make_save_menu()
 		self._make_game_menu()
@@ -17,7 +18,10 @@ class GameMenuController:
 	def _make_game_menu(self):
 		self.game_menu = pygame_menu.Menu("Game Menu", *self.size)
 		self.game_menu.add.button("Undo", action=self.undo_move)
-		self.game_menu.add.button("Quit", action=self.save_menu)
+		if self.can_save_game:
+			self.game_menu.add.button("Quit", action=self.save_menu)
+		else:
+			self.game_menu.add.button("Quit", action=self.quit_game)
 		self.game_menu.add.button("Back", action=self.close_menu)
 	
 	def _make_save_menu(self):
