@@ -1,3 +1,4 @@
+import pygame
 from connect4.Constants import Constants
 from connect4.Player import Player
 from connect4.Board import Board
@@ -65,7 +66,9 @@ class AIPlayer(Player):
 				self.moveCounter = self.moveRate
 				self.heldCounter = self.heldRate
 			return self.move / (Constants.COLS - 1)
-
+	 
+	def pump(self):
+		pygame.event.pump()
 
 	def policyTreeSearch(self, iterationsMax):
 		"""
@@ -76,6 +79,7 @@ class AIPlayer(Player):
 		root = self.nodes[-1]
 
 		for _ in range(iterationsMax):
+			self.pump()
 			node = root
 			state = root.state.copy()
 			
@@ -95,6 +99,7 @@ class AIPlayer(Player):
 
 		for child in root.children:
 			for _ in range(iterationsMax // len(root.children)):
+				self.pump()
 				node = child
 				state = child.state.copy()
 
@@ -118,6 +123,7 @@ class AIPlayer(Player):
 					break
 		
 		for _ in range(iterationsMax):
+				self.pump()
 				node = root
 				state = root.state.copy()
 
