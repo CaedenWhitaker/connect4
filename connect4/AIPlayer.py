@@ -4,22 +4,12 @@ import random
 
 
 class AIPlayer(Player):
-	def __init__(self, name):
-		"""
-
-		"""
-		super().__init__(name)
-		self.type = "C"
+	def __init__(self):
+		super().__init__()
 		self.heldPiece = 0.5
 		self.direction = 1
 	
 	def getNextMove(self, state: Board):
-		"""
-		This method decides what the next move is for the AI
-		@param state: the board for the current game
-		@returns: the column index to play on
-		@type: int
-		"""
 		if random.random() <= 0.005:
 			return random.choice([
 				i
@@ -28,11 +18,6 @@ class AIPlayer(Player):
 			])
 		
 	def getHeldPiece(self):
-		"""
-		This method returns the x-coord of the mouse position for the AI
-		@returns: the x-coord of the mouse position
-		@type: float
-		"""
 		previousHeldPiece = self.heldPiece
 		if random.random() <= 0.01:
 			self.direction = -self.direction

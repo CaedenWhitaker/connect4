@@ -1,4 +1,4 @@
-from connect4.Match import Match
+#from connect4.Match import Match
 import sqlite3
 
 
@@ -37,7 +37,7 @@ class GameDatabase:
 	def getMatches(self):
 		self.errors = self.errors or not self.loadMatches()
 		self.matches = [
-			dict(zip(("start","end","plname","p2name","p1type","p2type","winner","moves"), row))
+			dict(zip(("start","end","p1name","p2name","p1type","p2type","winner","moves"), row))
 			for row in self.matches
 		]
 		for match in self.matches:
@@ -60,7 +60,7 @@ class GameDatabase:
 			if connection is not None:
 				connection.close()
 
-	def save(self, match: Match) -> bool:
+	def save(self, match) -> bool:
 		player1WinsDelta = int(match.winner == 1)
 		player1LossesDelta = int(match.winner == 2)
 		player1DrawsDelta = int(match.winner == 3)
@@ -203,7 +203,7 @@ class GameDatabase:
 					"p1type": match.player1.type,
 					"p2type": match.player2.type,
 					"winner": str(match.winner),
-					"moves": "".join(map(str,match.moves))
+					"moves": "".join(map(str,match.board.moves))
 				}
 			)
 			connection.commit()
