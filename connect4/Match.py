@@ -1,4 +1,3 @@
-from sqlalchemy import true
 from connect4.Constants import Constants
 from connect4.GameDatabase import GameDatabase
 from connect4.MouseListener import MouseListener
