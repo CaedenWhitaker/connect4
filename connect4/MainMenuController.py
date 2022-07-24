@@ -109,11 +109,11 @@ class MainMenuController:
 		if self.player1 == 0:
 			self.local_menu.get_widget("p1name").set_value(self.player1_name)
 		else:
-			self.local_menu.get_widget("p1name").set_value("CP1")
+			self.local_menu.get_widget("p1name").set_value("CPU")
 		if self.player2 == 0:
 			self.local_menu.get_widget("p2name").set_value(self.player2_name)
 		else:
-			self.local_menu.get_widget("p2name").set_value("CP2")
+			self.local_menu.get_widget("p2name").set_value("CPU")
 	
 	def set_player1(self, value:tuple):
 		self.player1 = value[1]
