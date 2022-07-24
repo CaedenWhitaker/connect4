@@ -3,6 +3,12 @@ from connect4.AIPlayer import AIPlayer
 from connect4.Match import Match
 from connect4.VisualElement import VisualElement
 
+def test_AIPlayer_policyTreeSearch():
+	player = AIPlayer("CP1")
+	player.state.move(0)
+	move = player.policyTreeSearch()
+	print(move)
+
 def test_AIPlayer_getNextMove():
 	player = AIPlayer()
 	board = Board()
@@ -150,13 +156,14 @@ def test_board_top():
 
 
 if __name__ == "__main__":
-	test_AIPlayer_getHeldPiece()
-	test_AIPlayer_getNextMove()
-	test_Match_xToCol()
-	test_VisualElement_rescale()
-	test_board_move()
-	test_board_checkWin_vert()
-	test_board_checkWin_horiz()
-	test_board_checkWin_diag()
-	test_board_colFull()
-	test_board_top()
+	test_AIPlayer_policyTreeSearch()
+	# test_AIPlayer_getHeldPiece()
+	# test_AIPlayer_getNextMove()
+	# test_Match_xToCol()
+	# test_VisualElement_rescale()
+	# test_board_move()
+	# test_board_checkWin_vert()
+	# test_board_checkWin_horiz()
+	# test_board_checkWin_diag()
+	# test_board_colFull()
+	# test_board_top()
