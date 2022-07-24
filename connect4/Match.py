@@ -54,17 +54,18 @@ class Match(VisualElement, MouseListener):
 		self.slotRadius = self.canvasWidth / (2 * self.board.cols)
 		self.pieceRadius = 0.8 * self.slotRadius
 
-		self.font = pygame.font.SysFont(None, 175)
-		self.p1win = self.font.render("Player 1 Wins!", True, (255,0,0))
-		self.p2win = self.font.render("Player 2 Wins!", True, (0,0,255))
+		self.font = pygame.font.SysFont(None, math.floor(2 * self.pieceRadius * self.scale))
+		self.p1Win = self.font.render(f"Player 1, {self.player1.name}, Wins!", True, Match.player1Color)
+		self.p2Win = self.font.render(f"Player 2, {self.player2.name}, Wins!", True, Match.player2Color)
 		self.tieWin = self.font.render("Tie!", True, (255,255,255))
 
-		self.font_small = pygame.font.SysFont(None, int(30 * self.scale))
+		self.font_small = pygame.font.SysFont(None, math.floor(40 * self.scale))
 		self.move_is_invalid = False
 		self.invalid_prompt = self.font_small.render("Invalid", True, (255,255,255))
 
 		img = pygame.image.load(Constants.GEAR_ICON_PATH)
-		self.gear_icon = pygame.transform.scale(img, (25*self.scale, 25*self.scale))
+		self.gear_icon = pygame.transform.scale(img, (20*self.scale, 20*self.scale))
+		self.gearSize = VisualElement.rescale((25,25),self.scale,rounding=True)
 		self.game_menu = GameMenuController(self.scale)
 		self.open_game_menu = False
 		self.quit = False
@@ -79,8 +80,8 @@ class Match(VisualElement, MouseListener):
 			self.turn = not self.turn
 		if self.board.over:
 			self.board.over = False
-			if self.winning_player is not None:
-				self.turn = self.winning_player
+			if self.winner is not None:
+				self.turn = self.winner
 			else:
 				self.turn = True
 		self.player1.setTurn(self.turn)
@@ -117,15 +118,18 @@ class Match(VisualElement, MouseListener):
 			self.renderInvalidPrompt()
 		
 		if self.board.over:
-			font = pygame.font.SysFont(None, 175)
 			if self.winner == 1:
-				text_obj = font.render("Player 1 Wins!", True, (255,0,0))
-				self.surface.blit(text_obj, (10,0))
+				size = self.p1Win.get_size()
+				pos = ((self.scale*self.canvasWidth - size[0])/2, (2*self.scale*self.slotRadius - size[1])/2)
+				self.surface.blit(self.p1Win, pos)
 			if self.winner == 2:
-				text_obj = font.render("Player 2 Wins!", True, (0,0,255))
-				self.surface.blit(text_obj, (10,0))
+				size = self.p2Win.get_size()
+				pos = ((self.scale*self.canvasWidth - size[0])/2, (2*self.scale*self.slotRadius - size[1])/2)
+				self.surface.blit(self.p2Win, pos)
 			if self.winner == 3:
-				self.surface.blit(self.tieWin, (10,0))
+				size = self.tieWin.get_size()
+				pos = ((self.scale*self.canvasWidth - size[0])/2, (2*self.scale*self.slotRadius - size[1])/2)
+				self.surface.blit(self.tieWin, pos)
 		
 		self.renderMenuButton()
 		if self.open_game_menu:
@@ -147,33 +151,23 @@ class Match(VisualElement, MouseListener):
 		self.clock.tick(Match.framerate)
 	
 	def renderMenuButton(self):
-		self.surface.blit(self.gear_icon, (0,0))
+		self.surface.blit(self.gear_icon, VisualElement.rescale((2.5,2.5), self.scale, True))
 	
 	def renderInvalidPrompt(self):
-		x = MouseListener.getMousePosition()[0] / self.scale
-		col = (x-1) // (2 * self.slotRadius)
-		center = self.slotToPos(Board.rows, col)
-		top_corner = (center[0] - self.slotRadius, center[1] - self.slotRadius)#translate center to top corner
-		#top_corner = (top_corner[0] + 2, top_corner[1] - 3*self.slotRadius)
+		pos = self.slotToPos(Board.rows, self.potentialMove)
+		pos = (pos[0] - self.slotRadius, pos[1] - self.slotRadius / 2)
+		pos = (pos[0], pos[1], 2*self.slotRadius, self.slotRadius)
+		pos = VisualElement.rescale(pos, self.scale)
+		pygame.draw.rect(self.surface, self.colorMap[self.turn], pos, 0, round(self.scale*12))
+		pygame.draw.rect(self.surface, (50,50,50), pos, round(self.scale*5), round(self.scale*12))
 		
-		
-		padding_x = (self.slotRadius - self.pieceRadius)
-		padding_y = self.slotRadius - (self.slotRadius//4) - 2
-		top_corner_scaled = VisualElement.rescale(top_corner, self.scale)
-		pygame.draw.rect(self.surface, (50,50,50), (top_corner_scaled[0] + padding_x,
-													top_corner_scaled[1] + padding_y,
-													self.slotRadius*2,
-													self.slotRadius), 0, 12)
-		pygame.draw.rect(self.surface, self.colorMap[self.turn], (top_corner_scaled[0] + padding_x,
-																	top_corner_scaled[1] + padding_y,
-																	self.slotRadius*2,
-																	self.slotRadius), 5, 12)
-		
-		size = self.font_small.size("Invalid")
-		text_pad_x = ((self.slotRadius*2) - size[0]) / 2
-		text_pad_y = (self.slotRadius - size[1]) / 2
-		self.surface.blit(self.invalid_prompt, (top_corner_scaled[0] + padding_x + text_pad_x, 
-												top_corner_scaled[1] + padding_y + text_pad_y))
+		size = self.invalid_prompt.get_size()
+		size = VisualElement.rescale(size, 1/self.scale)
+		pos = VisualElement.rescale(pos, 1/self.scale)
+		textPad = [(2*self.slotRadius - size[0]) / 2, (self.slotRadius - size[1]) / 2]
+		pos = (pos[0] + textPad[0], pos[1] + textPad[1], 2*self.slotRadius, self.slotRadius)
+		pos = VisualElement.rescale(pos, self.scale)
+		self.surface.blit(self.invalid_prompt, pos)
 	
 		
 
@@ -211,7 +205,7 @@ class Match(VisualElement, MouseListener):
 
 	def renderPotentialMove(self):
 		col = self.potentialMove
-		if col is not None:
+		if not self.board.colFull(self.potentialMove):
 			x, y = self.slotToPos(self.board.top(col), col)
 			self.renderPiece(x, y, self.turn, 0.35)
 
@@ -223,7 +217,7 @@ class Match(VisualElement, MouseListener):
 		if isinstance(x, int):
 			self.heldPiece = x / self.scale
 		elif isinstance(x, float):
-			self.heldPiece = x * (self.canvasWidth - 2 * self.slotRadius)
+			self.heldPiece = x * (self.canvasWidth - 2 * self.slotRadius) + self.slotRadius
 		else:
 			self.heldPiece = self.canvasWidth / 2
 		self.heldPiece -= self.slotRadius
@@ -233,8 +227,6 @@ class Match(VisualElement, MouseListener):
 	def updatePotentialMove(self):
 		self.potentialMove = self.xToCol(self.heldPiece)
 		self.move_is_invalid = self.board.colFull(self.potentialMove)
-		if self.board.colFull(self.potentialMove):
-			self.potentialMove = None
 		if self.turn:
 			self.player2.setPotentialMove(self.potentialMove)
 		else:
@@ -246,7 +238,7 @@ class Match(VisualElement, MouseListener):
 	def onClick(self):
 		for event in MouseListener.events:
 			if event.type == pygame.MOUSEBUTTONDOWN:
-				if event.pos[0] <= 27 and event.pos[1] <= 27:
+				if event.pos[0] <= self.gearSize[0] and event.pos[1] <= self.gearSize[1]:
 					self.open_game_menu = True
 					continue
 			#if the menu button was clicked, the code will not get this far

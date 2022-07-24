@@ -4,6 +4,8 @@ class Constants:
 	DATABASE_PATH = r"connect4.db"
 	GEAR_ICON_PATH = r"connect4\resources\gear.png"
 	INF = float("inf")
+	COLS = 7
+	ROWS = 6
 	def get_main_theme():
 		return {
 	        "background_color": pygame_menu.BaseImage(r"connect4\resources\c4_bg_pic.png"),

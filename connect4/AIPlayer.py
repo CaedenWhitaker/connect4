@@ -1,3 +1,4 @@
+from connect4.Constants import Constants
 from connect4.Player import Player
 from connect4.Board import Board
 from connect4.PolicyNode import PolicyNode
@@ -7,15 +8,17 @@ import time
 
 
 class AIPlayer(Player):
-	def __init__(self, name):
+	def __init__(self, name, difficulty=5):
 		super().__init__(name)
 		self.type = "C"
-		self.heldPiece = 0.5
-		self.direction = 1
 		self.nodes = []
 		self.deadline = None
 		self.running = False
-		self.counter = 30
+		self.moveRate = 5
+		self.heldRate = 90
+		self.moveCounter = self.moveRate
+		self.heldCounter = self.heldRate
+		self.difficulty = difficulty
 	
 	def getNextMove(self, board: Board):
 		"""
@@ -24,10 +27,9 @@ class AIPlayer(Player):
 		@returns: the column index to play on
 		@type: int
 		"""
-		if self.counter > 0:
-			self.counter -= 1
-			return None
-		else:
+		if self.moveCounter > -1:
+			self.moveCounter -= 1
+		if self.moveCounter == 0:
 			if len(self.nodes) == 0 or PolicyState.fromMoves(board.moves[:-1]).boards != self.nodes[-1].state.boards:
 				self.nodes = [PolicyNode(PolicyState.fromMoves(board.moves[:-1]))]
 			if len(board.moves) > 0:
@@ -41,8 +43,11 @@ class AIPlayer(Player):
 					state.move(move)
 					child = parent.expand(move, state)
 				self.nodes.append(child)
-			self.counter = 30
-			return self.policyTreeSearch()
+			self.move = self.policyTreeSearch(20*(1+self.difficulty)**3)
+		if self.heldCounter == 0:
+			return self.move
+		else:
+			return None
 			
 		
 	def getHeldPiece(self):
@@ -51,15 +56,18 @@ class AIPlayer(Player):
 		@returns: the x-coord of the mouse position
 		@type: float
 		"""
-		previousHeldPiece = self.heldPiece
-		self.heldPiece += self.direction * 0.005
-		self.heldPiece = max(min(self.heldPiece, 1.0), 0.0)
-		if self.heldPiece in {0.0, 1.0}:
-			self.direction = -self.direction
-		return previousHeldPiece
+		if self.moveCounter > -1:
+			return 0.5
+		else:
+			if self.heldCounter > 0:
+				self.heldCounter -= 1
+			else:
+				self.moveCounter = self.moveRate
+				self.heldCounter = self.heldRate
+			return self.move / (Constants.COLS - 1)
 
 
-	def policyTreeSearch(self, iterationsMax=10000):
+	def policyTreeSearch(self, iterationsMax):
 		"""
 			Monte Carlo Tree Search for Connect Four
 			Implementation referenced from https://replit.com/talk/share/Connect-4-AI-using-Monte-Carlo-Tree-Search/10640
