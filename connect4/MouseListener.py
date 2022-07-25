@@ -27,6 +27,7 @@ class MouseListener:
 				listener.onClick()
 
 	def __init__(self) -> None:
+		"constructor"
 		pass
 
 	def register(self):
@@ -46,9 +47,11 @@ class MouseListener:
 		MouseListener.listeners.remove(self)
 	
 	def clear():
+		"remove all open mouse listeners"
 		MouseListener.listeners.clear()
 
 	def onClick(self):
+		"interface method"
 		raise NotImplementedError
 
 	def getMousePosition():

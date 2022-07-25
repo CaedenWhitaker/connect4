@@ -1,3 +1,5 @@
+import sys
+import pygame
 from connect4.Constants import Constants
 from connect4.Player import Player
 from connect4.Board import Board
@@ -9,6 +11,7 @@ import time
 
 class AIPlayer(Player):
 	def __init__(self, name, difficulty=5):
+		"constructor"
 		super().__init__(name)
 		self.type = "C"
 		self.nodes = []
@@ -65,17 +68,25 @@ class AIPlayer(Player):
 				self.moveCounter = self.moveRate
 				self.heldCounter = self.heldRate
 			return self.move / (Constants.COLS - 1)
-
+	 
+	def pump(self):
+		"clear events to prevent obvious hanging"
+		if pygame.event.peek(pygame.QUIT):
+			pygame.quit()
+			sys.exit(0)
+		pygame.event.pump()
 
 	def policyTreeSearch(self, iterationsMax):
 		"""
 			Monte Carlo Tree Search for Connect Four
-			Implementation referenced from https://replit.com/talk/share/Connect-4-AI-using-Monte-Carlo-Tree-Search/10640
+			Algorithm _referenced_ from https://replit.com/talk/share/Connect-4-AI-using-Monte-Carlo-Tree-Search/10640
+			Actual implementation differs significantly
 			Thanks to Christopher Yong (see also PolicyNode and PolicyState)
 		"""
 		root = self.nodes[-1]
 
 		for _ in range(iterationsMax):
+			self.pump()
 			node = root
 			state = root.state.copy()
 			
@@ -95,6 +106,7 @@ class AIPlayer(Player):
 
 		for child in root.children:
 			for _ in range(iterationsMax // len(root.children)):
+				self.pump()
 				node = child
 				state = child.state.copy()
 
@@ -118,6 +130,7 @@ class AIPlayer(Player):
 					break
 		
 		for _ in range(iterationsMax):
+				self.pump()
 				node = root
 				state = root.state.copy()
 

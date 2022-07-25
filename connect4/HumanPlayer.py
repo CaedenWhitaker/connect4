@@ -6,6 +6,7 @@ import pygame
 class HumanPlayer(Player, MouseListener):
 
 	def __init__(self, name) -> None:
+		"constructor"
 		super().__init__(name)
 		self.type = "H"
 		self.heldPiece = 0

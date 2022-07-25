@@ -56,8 +56,16 @@ class Match(VisualElement, MouseListener):
 		self.pieceRadius = 0.8 * self.slotRadius
 
 		self.font = pygame.font.SysFont(None, math.floor(2 * self.pieceRadius * self.scale))
-		self.p1Win = self.font.render(f"Player 1, {self.player1.name}, Wins!", True, Match.player1Color)
-		self.p2Win = self.font.render(f"Player 2, {self.player2.name}, Wins!", True, Match.player2Color)
+		if self.player1.type == "C":
+			self.p1Win = self.font.render(f"CPU Wins!", True, Match.player1Color)
+		else: 
+			self.p1Win = self.font.render(f"{self.player1.name} Wins!", True, Match.player1Color)
+		
+		if self.player2.type == "C":
+			self.p2Win = self.font.render(f"CPU Wins!", True, Match.player2Color)
+		else: 
+			self.p2Win = self.font.render(f"{self.player2.name} Wins!", True, Match.player2Color)
+		
 		self.tieWin = self.font.render("Tie!", True, (255,255,255))
 
 		self.font_small = pygame.font.SysFont(None, math.floor(40 * self.scale))
@@ -70,9 +78,9 @@ class Match(VisualElement, MouseListener):
 		self.game_menu = GameMenuController(self.scale)
 		self.open_game_menu = False
 		self.quit = False
-		print(self.player1.type, self.player2.type)
 
 	def undo_humans(self):
+		"undo only one move at a time"
 		undone = self.board.undo()
 		if not undone:#if no pieces are on the board, do nothing
 			return
@@ -95,6 +103,7 @@ class Match(VisualElement, MouseListener):
 		self.undo_one_com()
 
 	def undo(self):
+		"undo the last move(s) depending on player types"
 		if self.player1.type == "H" and self.player2.type == "H":
 			self.undo_humans()
 			return
@@ -109,7 +118,7 @@ class Match(VisualElement, MouseListener):
 
 	def doTurn(self):
 		"""
-		
+		main logic for turn/order
 		"""
 		if self.turn:
 			col = self.player2.getNextMove(self.board)
@@ -129,6 +138,7 @@ class Match(VisualElement, MouseListener):
 			self.player2.setTurn(self.turn)
 
 	def render(self):
+		"overload the interface to call over methods for each visual component"
 		self.renderBackground()
 		self.renderBoard()
 		self.renderHeldPiece()
@@ -170,9 +180,11 @@ class Match(VisualElement, MouseListener):
 		self.clock.tick(Match.framerate)
 	
 	def renderMenuButton(self):
+		"display pause menu"
 		self.surface.blit(self.gear_icon, VisualElement.rescale((2.5,2.5), self.scale, True))
 	
 	def renderInvalidPrompt(self):
+		"display 'INVLAID' when user is hovering over a column they can't play in"
 		pos = self.slotToPos(Board.rows, self.potentialMove)
 		pos = (pos[0] - self.slotRadius, pos[1] - self.slotRadius / 2)
 		pos = (pos[0], pos[1], 2*self.slotRadius, self.slotRadius)
@@ -191,9 +203,11 @@ class Match(VisualElement, MouseListener):
 		
 
 	def renderBackground(self):
+		"displayer background color"
 		self.surface.fill(Match.backgroundColor)
 
 	def renderBoard(self):
+		"display each slot and piece"
 		pygame.draw.rect(
 			self.surface,
 			Match.boardColor,
@@ -205,11 +219,13 @@ class Match(VisualElement, MouseListener):
 				self.renderPiece(x, y, self.board.state[row][col])
 
 	def slotToPos(self, row, col):
+		"convert row x col into x and y values for graphical purposes"
 		x = (2 * self.slotRadius * col) + self.slotRadius
 		y = (2 * self.slotRadius * (self.board.rows-1-row)) + 3 * self.slotRadius
 		return (x, y)
 
 	def renderPiece(self, x, y, turn, alpha=1.0):
+		"max rendering the pieces simpler"
 		x, y = VisualElement.rescale((x, y), self.scale)
 		color = self.colorMap[turn]
 		if alpha:
@@ -217,18 +233,21 @@ class Match(VisualElement, MouseListener):
 		pygame.draw.circle(self.surface, color, (x, y), self.scale * self.pieceRadius)
 
 	def renderHeldPiece(self):
+		"get the updated piece information, and then display it"
 		self.updateHeldPiece()
 		x = self.heldPiece + self.slotRadius
 		y = self.slotRadius
 		self.renderPiece(x, y, self.turn)
 
 	def renderPotentialMove(self):
+		"display where the held piece would fall"
 		col = self.potentialMove
 		if not self.board.colFull(self.potentialMove):
 			x, y = self.slotToPos(self.board.top(col), col)
 			self.renderPiece(x, y, self.turn, 0.35)
 
 	def updateHeldPiece(self):
+		"get held piece from player's method"
 		if self.turn:
 			x = self.player2.getHeldPiece()
 		else:
@@ -244,6 +263,7 @@ class Match(VisualElement, MouseListener):
 		self.updatePotentialMove()
 
 	def updatePotentialMove(self):
+		"show where the held piece would fall"
 		self.potentialMove = self.xToCol(self.heldPiece)
 		self.move_is_invalid = self.board.colFull(self.potentialMove)
 		if self.turn:
@@ -252,9 +272,11 @@ class Match(VisualElement, MouseListener):
 			self.player1.setPotentialMove(self.potentialMove)
 	
 	def xToCol(self, x: int):
+		"convert x coord to col number"
 		return math.floor(self.board.cols * (x + self.slotRadius) / (self.canvasWidth))
 	
 	def onClick(self):
+		"mouse listener for pause menu"
 		for event in MouseListener.events:
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if event.pos[0] <= self.gearSize[0] and event.pos[1] <= self.gearSize[1]:
@@ -264,6 +286,7 @@ class Match(VisualElement, MouseListener):
 			#if self.board.over and event.type == pygame.MOUSEBUTTONDOWN:
 				#self.running = False
 	def deregister_listeners(self):
+		"handle mouse listeners for the end game"
 		if hasattr(self.player1, "deregister"):
 			self.player1.deregister()
 		if hasattr(self.player2, "deregister"):
@@ -271,6 +294,7 @@ class Match(VisualElement, MouseListener):
 		self.deregister()
 	
 	def mainloop(self):
+		"loop as needed for graphics (i really like this better in main -cgw)"
 		self.running = True
 		while self.running and not self.quit:
 			if pygame.event.peek(eventtype=pygame.QUIT):

@@ -49,10 +49,16 @@
                                 <a class="variable" href="#Board.state">state</a>
                         </li>
                         <li>
+                                <a class="function" href="#Board.undo">undo</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#Board.move">move</a>
                         </li>
                         <li>
                                 <a class="function" href="#Board.checkWin">checkWin</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#Board.checkFull">checkFull</a>
                         </li>
                         <li>
                                 <a class="function" href="#Board.checkWinAux">checkWinAux</a>
@@ -98,100 +104,124 @@
 </span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>		<span class="sd">&quot;&quot;&quot;2D array board state. None for empty, else bool for the player.&quot;&quot;&quot;</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">)]</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">		Args:</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="sd">		</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">		Returns:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>			<span class="k">return</span> <span class="kc">False</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>		<span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>	
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">		Args:</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">		</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">		Returns:</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">over</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">		Args:</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">		</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">		Returns:</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>		<span class="k">return</span> <span class="kc">False</span>	
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">		Args:</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">		Returns:</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>	
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">		Find the top open slot in a specific column.</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">		Args:</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">		Returns:</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>	
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>	<span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>		<span class="sd">&quot;&quot;&quot;remove last play&quot;&quot;&quot;</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span><span class="c1">#if no pieces are on the board, do nothing</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>		<span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="sd">		Args:</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">		</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">		Returns:</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>	
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">		Args:</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">		</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">		Returns:</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">):</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>			<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkFull</span><span class="p">():</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>			<span class="k">return</span> <span class="mi">3</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>		<span class="k">return</span> <span class="mi">0</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>	
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>	<span class="k">def</span> <span class="nf">checkFull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>		<span class="sd">&quot;&quot;&quot;returns true if there is no more valid moves&quot;&quot;&quot;</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>		<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">:</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>			<span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>				<span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">		Args:</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">		</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">		Returns:</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>		<span class="k">return</span> <span class="kc">False</span>	
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">		Args:</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">		Returns:</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>	
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">		Find the top open slot in a specific column.</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">		Args:</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">		Returns:</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -207,111 +237,135 @@
 
     </div>
     <a class="headerlink" href="#Board"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board-2"><a href="#Board-2"><span class="linenos">  2</span></a><span class="k">class</span> <span class="nc">Board</span><span class="p">:</span>
-</span><span id="Board-3"><a href="#Board-3"><span class="linenos">  3</span></a>	<span class="n">rows</span> <span class="o">=</span> <span class="mi">6</span>
-</span><span id="Board-4"><a href="#Board-4"><span class="linenos">  4</span></a>	<span class="n">cols</span> <span class="o">=</span> <span class="mi">7</span>
-</span><span id="Board-5"><a href="#Board-5"><span class="linenos">  5</span></a>	<span class="n">goal</span> <span class="o">=</span> <span class="mi">4</span>
-</span><span id="Board-6"><a href="#Board-6"><span class="linenos">  6</span></a>
-</span><span id="Board-7"><a href="#Board-7"><span class="linenos">  7</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="Board-8"><a href="#Board-8"><span class="linenos">  8</span></a>		<span class="sd">&quot;&quot;&quot;Create an empty board object&quot;&quot;&quot;</span>
-</span><span id="Board-9"><a href="#Board-9"><span class="linenos">  9</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">)]</span>
-</span><span id="Board-10"><a href="#Board-10"><span class="linenos"> 10</span></a>		<span class="sd">&quot;&quot;&quot;2D array board state. None for empty, else bool for the player.&quot;&quot;&quot;</span>
-</span><span id="Board-11"><a href="#Board-11"><span class="linenos"> 11</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">)]</span>
-</span><span id="Board-12"><a href="#Board-12"><span class="linenos"> 12</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="Board-13"><a href="#Board-13"><span class="linenos"> 13</span></a>
-</span><span id="Board-14"><a href="#Board-14"><span class="linenos"> 14</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board-15"><a href="#Board-15"><span class="linenos"> 15</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board-16"><a href="#Board-16"><span class="linenos"> 16</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
-</span><span id="Board-17"><a href="#Board-17"><span class="linenos"> 17</span></a>
-</span><span id="Board-18"><a href="#Board-18"><span class="linenos"> 18</span></a><span class="sd">		Args:</span>
-</span><span id="Board-19"><a href="#Board-19"><span class="linenos"> 19</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
-</span><span id="Board-20"><a href="#Board-20"><span class="linenos"> 20</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board-21"><a href="#Board-21"><span class="linenos"> 21</span></a><span class="sd">		</span>
-</span><span id="Board-22"><a href="#Board-22"><span class="linenos"> 22</span></a><span class="sd">		Returns:</span>
-</span><span id="Board-23"><a href="#Board-23"><span class="linenos"> 23</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
-</span><span id="Board-24"><a href="#Board-24"><span class="linenos"> 24</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board-25"><a href="#Board-25"><span class="linenos"> 25</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
-</span><span id="Board-26"><a href="#Board-26"><span class="linenos"> 26</span></a>			<span class="k">return</span> <span class="kc">False</span>
-</span><span id="Board-27"><a href="#Board-27"><span class="linenos"> 27</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
-</span><span id="Board-28"><a href="#Board-28"><span class="linenos"> 28</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="Board-29"><a href="#Board-29"><span class="linenos"> 29</span></a>		<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board-30"><a href="#Board-30"><span class="linenos"> 30</span></a>	
-</span><span id="Board-31"><a href="#Board-31"><span class="linenos"> 31</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board-32"><a href="#Board-32"><span class="linenos"> 32</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board-33"><a href="#Board-33"><span class="linenos"> 33</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
-</span><span id="Board-34"><a href="#Board-34"><span class="linenos"> 34</span></a>
-</span><span id="Board-35"><a href="#Board-35"><span class="linenos"> 35</span></a><span class="sd">		Args:</span>
-</span><span id="Board-36"><a href="#Board-36"><span class="linenos"> 36</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board-37"><a href="#Board-37"><span class="linenos"> 37</span></a><span class="sd">		</span>
-</span><span id="Board-38"><a href="#Board-38"><span class="linenos"> 38</span></a><span class="sd">		Returns:</span>
-</span><span id="Board-39"><a href="#Board-39"><span class="linenos"> 39</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="Board-40"><a href="#Board-40"><span class="linenos"> 40</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board-41"><a href="#Board-41"><span class="linenos"> 41</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span>
-</span><span id="Board-42"><a href="#Board-42"><span class="linenos"> 42</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">over</span>
-</span><span id="Board-43"><a href="#Board-43"><span class="linenos"> 43</span></a>
-</span><span id="Board-44"><a href="#Board-44"><span class="linenos"> 44</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board-45"><a href="#Board-45"><span class="linenos"> 45</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board-46"><a href="#Board-46"><span class="linenos"> 46</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
-</span><span id="Board-47"><a href="#Board-47"><span class="linenos"> 47</span></a>
-</span><span id="Board-48"><a href="#Board-48"><span class="linenos"> 48</span></a><span class="sd">		Args:</span>
-</span><span id="Board-49"><a href="#Board-49"><span class="linenos"> 49</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board-50"><a href="#Board-50"><span class="linenos"> 50</span></a><span class="sd">		</span>
-</span><span id="Board-51"><a href="#Board-51"><span class="linenos"> 51</span></a><span class="sd">		Returns:</span>
-</span><span id="Board-52"><a href="#Board-52"><span class="linenos"> 52</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="Board-53"><a href="#Board-53"><span class="linenos"> 53</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board-54"><a href="#Board-54"><span class="linenos"> 54</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="Board-55"><a href="#Board-55"><span class="linenos"> 55</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board-56"><a href="#Board-56"><span class="linenos"> 56</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board-57"><a href="#Board-57"><span class="linenos"> 57</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board-58"><a href="#Board-58"><span class="linenos"> 58</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board-59"><a href="#Board-59"><span class="linenos"> 59</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board-60"><a href="#Board-60"><span class="linenos"> 60</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board-61"><a href="#Board-61"><span class="linenos"> 61</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board-62"><a href="#Board-62"><span class="linenos"> 62</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
-</span><span id="Board-63"><a href="#Board-63"><span class="linenos"> 63</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board-64"><a href="#Board-64"><span class="linenos"> 64</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board-65"><a href="#Board-65"><span class="linenos"> 65</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board-66"><a href="#Board-66"><span class="linenos"> 66</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board-67"><a href="#Board-67"><span class="linenos"> 67</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board-68"><a href="#Board-68"><span class="linenos"> 68</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board-69"><a href="#Board-69"><span class="linenos"> 69</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board-70"><a href="#Board-70"><span class="linenos"> 70</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board-71"><a href="#Board-71"><span class="linenos"> 71</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board-72"><a href="#Board-72"><span class="linenos"> 72</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board-73"><a href="#Board-73"><span class="linenos"> 73</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board-74"><a href="#Board-74"><span class="linenos"> 74</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board-75"><a href="#Board-75"><span class="linenos"> 75</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board-76"><a href="#Board-76"><span class="linenos"> 76</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="Board-77"><a href="#Board-77"><span class="linenos"> 77</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board-78"><a href="#Board-78"><span class="linenos"> 78</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board-79"><a href="#Board-79"><span class="linenos"> 79</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board-80"><a href="#Board-80"><span class="linenos"> 80</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board-81"><a href="#Board-81"><span class="linenos"> 81</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board-82"><a href="#Board-82"><span class="linenos"> 82</span></a>		<span class="k">return</span> <span class="kc">False</span>	
-</span><span id="Board-83"><a href="#Board-83"><span class="linenos"> 83</span></a>
-</span><span id="Board-84"><a href="#Board-84"><span class="linenos"> 84</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board-85"><a href="#Board-85"><span class="linenos"> 85</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board-86"><a href="#Board-86"><span class="linenos"> 86</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
-</span><span id="Board-87"><a href="#Board-87"><span class="linenos"> 87</span></a>
-</span><span id="Board-88"><a href="#Board-88"><span class="linenos"> 88</span></a><span class="sd">		Args:</span>
-</span><span id="Board-89"><a href="#Board-89"><span class="linenos"> 89</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="Board-90"><a href="#Board-90"><span class="linenos"> 90</span></a>
-</span><span id="Board-91"><a href="#Board-91"><span class="linenos"> 91</span></a><span class="sd">		Returns:</span>
-</span><span id="Board-92"><a href="#Board-92"><span class="linenos"> 92</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
-</span><span id="Board-93"><a href="#Board-93"><span class="linenos"> 93</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board-94"><a href="#Board-94"><span class="linenos"> 94</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
-</span><span id="Board-95"><a href="#Board-95"><span class="linenos"> 95</span></a>	
-</span><span id="Board-96"><a href="#Board-96"><span class="linenos"> 96</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="Board-97"><a href="#Board-97"><span class="linenos"> 97</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board-98"><a href="#Board-98"><span class="linenos"> 98</span></a><span class="sd">		Find the top open slot in a specific column.</span>
-</span><span id="Board-99"><a href="#Board-99"><span class="linenos"> 99</span></a>
-</span><span id="Board-100"><a href="#Board-100"><span class="linenos">100</span></a><span class="sd">		Args:</span>
-</span><span id="Board-101"><a href="#Board-101"><span class="linenos">101</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="Board-102"><a href="#Board-102"><span class="linenos">102</span></a>
-</span><span id="Board-103"><a href="#Board-103"><span class="linenos">103</span></a><span class="sd">		Returns:</span>
-</span><span id="Board-104"><a href="#Board-104"><span class="linenos">104</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
-</span><span id="Board-105"><a href="#Board-105"><span class="linenos">105</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board-106"><a href="#Board-106"><span class="linenos">106</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board-4"><a href="#Board-4"><span class="linenos">  4</span></a><span class="k">class</span> <span class="nc">Board</span><span class="p">:</span>
+</span><span id="Board-5"><a href="#Board-5"><span class="linenos">  5</span></a>	<span class="n">rows</span> <span class="o">=</span> <span class="mi">6</span>
+</span><span id="Board-6"><a href="#Board-6"><span class="linenos">  6</span></a>	<span class="n">cols</span> <span class="o">=</span> <span class="mi">7</span>
+</span><span id="Board-7"><a href="#Board-7"><span class="linenos">  7</span></a>	<span class="n">goal</span> <span class="o">=</span> <span class="mi">4</span>
+</span><span id="Board-8"><a href="#Board-8"><span class="linenos">  8</span></a>
+</span><span id="Board-9"><a href="#Board-9"><span class="linenos">  9</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Board-10"><a href="#Board-10"><span class="linenos"> 10</span></a>		<span class="sd">&quot;&quot;&quot;Create an empty board object&quot;&quot;&quot;</span>
+</span><span id="Board-11"><a href="#Board-11"><span class="linenos"> 11</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">)]</span>
+</span><span id="Board-12"><a href="#Board-12"><span class="linenos"> 12</span></a>		<span class="sd">&quot;&quot;&quot;2D array board state. None for empty, else bool for the player.&quot;&quot;&quot;</span>
+</span><span id="Board-13"><a href="#Board-13"><span class="linenos"> 13</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">)]</span>
+</span><span id="Board-14"><a href="#Board-14"><span class="linenos"> 14</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Board-15"><a href="#Board-15"><span class="linenos"> 15</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+</span><span id="Board-16"><a href="#Board-16"><span class="linenos"> 16</span></a>	
+</span><span id="Board-17"><a href="#Board-17"><span class="linenos"> 17</span></a>	<span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Board-18"><a href="#Board-18"><span class="linenos"> 18</span></a>		<span class="sd">&quot;&quot;&quot;remove last play&quot;&quot;&quot;</span>
+</span><span id="Board-19"><a href="#Board-19"><span class="linenos"> 19</span></a>		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span><span class="c1">#if no pieces are on the board, do nothing</span>
+</span><span id="Board-20"><a href="#Board-20"><span class="linenos"> 20</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board-21"><a href="#Board-21"><span class="linenos"> 21</span></a>		<span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="Board-22"><a href="#Board-22"><span class="linenos"> 22</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="Board-23"><a href="#Board-23"><span class="linenos"> 23</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="Board-24"><a href="#Board-24"><span class="linenos"> 24</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-25"><a href="#Board-25"><span class="linenos"> 25</span></a>
+</span><span id="Board-26"><a href="#Board-26"><span class="linenos"> 26</span></a>
+</span><span id="Board-27"><a href="#Board-27"><span class="linenos"> 27</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board-28"><a href="#Board-28"><span class="linenos"> 28</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board-29"><a href="#Board-29"><span class="linenos"> 29</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
+</span><span id="Board-30"><a href="#Board-30"><span class="linenos"> 30</span></a>
+</span><span id="Board-31"><a href="#Board-31"><span class="linenos"> 31</span></a><span class="sd">		Args:</span>
+</span><span id="Board-32"><a href="#Board-32"><span class="linenos"> 32</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
+</span><span id="Board-33"><a href="#Board-33"><span class="linenos"> 33</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board-34"><a href="#Board-34"><span class="linenos"> 34</span></a><span class="sd">		</span>
+</span><span id="Board-35"><a href="#Board-35"><span class="linenos"> 35</span></a><span class="sd">		Returns:</span>
+</span><span id="Board-36"><a href="#Board-36"><span class="linenos"> 36</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
+</span><span id="Board-37"><a href="#Board-37"><span class="linenos"> 37</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board-38"><a href="#Board-38"><span class="linenos"> 38</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+</span><span id="Board-39"><a href="#Board-39"><span class="linenos"> 39</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board-40"><a href="#Board-40"><span class="linenos"> 40</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
+</span><span id="Board-41"><a href="#Board-41"><span class="linenos"> 41</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="Board-42"><a href="#Board-42"><span class="linenos"> 42</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</span><span id="Board-43"><a href="#Board-43"><span class="linenos"> 43</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-44"><a href="#Board-44"><span class="linenos"> 44</span></a>	
+</span><span id="Board-45"><a href="#Board-45"><span class="linenos"> 45</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Board-46"><a href="#Board-46"><span class="linenos"> 46</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board-47"><a href="#Board-47"><span class="linenos"> 47</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
+</span><span id="Board-48"><a href="#Board-48"><span class="linenos"> 48</span></a>
+</span><span id="Board-49"><a href="#Board-49"><span class="linenos"> 49</span></a><span class="sd">		Args:</span>
+</span><span id="Board-50"><a href="#Board-50"><span class="linenos"> 50</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board-51"><a href="#Board-51"><span class="linenos"> 51</span></a><span class="sd">		</span>
+</span><span id="Board-52"><a href="#Board-52"><span class="linenos"> 52</span></a><span class="sd">		Returns:</span>
+</span><span id="Board-53"><a href="#Board-53"><span class="linenos"> 53</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="Board-54"><a href="#Board-54"><span class="linenos"> 54</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board-55"><a href="#Board-55"><span class="linenos"> 55</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">):</span>
+</span><span id="Board-56"><a href="#Board-56"><span class="linenos"> 56</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-57"><a href="#Board-57"><span class="linenos"> 57</span></a>			<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="Board-58"><a href="#Board-58"><span class="linenos"> 58</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkFull</span><span class="p">():</span>
+</span><span id="Board-59"><a href="#Board-59"><span class="linenos"> 59</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-60"><a href="#Board-60"><span class="linenos"> 60</span></a>			<span class="k">return</span> <span class="mi">3</span>
+</span><span id="Board-61"><a href="#Board-61"><span class="linenos"> 61</span></a>		<span class="k">return</span> <span class="mi">0</span>
+</span><span id="Board-62"><a href="#Board-62"><span class="linenos"> 62</span></a>	
+</span><span id="Board-63"><a href="#Board-63"><span class="linenos"> 63</span></a>	<span class="k">def</span> <span class="nf">checkFull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Board-64"><a href="#Board-64"><span class="linenos"> 64</span></a>		<span class="sd">&quot;&quot;&quot;returns true if there is no more valid moves&quot;&quot;&quot;</span>
+</span><span id="Board-65"><a href="#Board-65"><span class="linenos"> 65</span></a>		<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">:</span>
+</span><span id="Board-66"><a href="#Board-66"><span class="linenos"> 66</span></a>			<span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+</span><span id="Board-67"><a href="#Board-67"><span class="linenos"> 67</span></a>				<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board-68"><a href="#Board-68"><span class="linenos"> 68</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-69"><a href="#Board-69"><span class="linenos"> 69</span></a>
+</span><span id="Board-70"><a href="#Board-70"><span class="linenos"> 70</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board-71"><a href="#Board-71"><span class="linenos"> 71</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board-72"><a href="#Board-72"><span class="linenos"> 72</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
+</span><span id="Board-73"><a href="#Board-73"><span class="linenos"> 73</span></a>
+</span><span id="Board-74"><a href="#Board-74"><span class="linenos"> 74</span></a><span class="sd">		Args:</span>
+</span><span id="Board-75"><a href="#Board-75"><span class="linenos"> 75</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board-76"><a href="#Board-76"><span class="linenos"> 76</span></a><span class="sd">		</span>
+</span><span id="Board-77"><a href="#Board-77"><span class="linenos"> 77</span></a><span class="sd">		Returns:</span>
+</span><span id="Board-78"><a href="#Board-78"><span class="linenos"> 78</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="Board-79"><a href="#Board-79"><span class="linenos"> 79</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board-80"><a href="#Board-80"><span class="linenos"> 80</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
+</span><span id="Board-81"><a href="#Board-81"><span class="linenos"> 81</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board-82"><a href="#Board-82"><span class="linenos"> 82</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-83"><a href="#Board-83"><span class="linenos"> 83</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board-84"><a href="#Board-84"><span class="linenos"> 84</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board-85"><a href="#Board-85"><span class="linenos"> 85</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board-86"><a href="#Board-86"><span class="linenos"> 86</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-87"><a href="#Board-87"><span class="linenos"> 87</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board-88"><a href="#Board-88"><span class="linenos"> 88</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="Board-89"><a href="#Board-89"><span class="linenos"> 89</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-90"><a href="#Board-90"><span class="linenos"> 90</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board-91"><a href="#Board-91"><span class="linenos"> 91</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board-92"><a href="#Board-92"><span class="linenos"> 92</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board-93"><a href="#Board-93"><span class="linenos"> 93</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-94"><a href="#Board-94"><span class="linenos"> 94</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board-95"><a href="#Board-95"><span class="linenos"> 95</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board-96"><a href="#Board-96"><span class="linenos"> 96</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-97"><a href="#Board-97"><span class="linenos"> 97</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board-98"><a href="#Board-98"><span class="linenos"> 98</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board-99"><a href="#Board-99"><span class="linenos"> 99</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board-100"><a href="#Board-100"><span class="linenos">100</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-101"><a href="#Board-101"><span class="linenos">101</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board-102"><a href="#Board-102"><span class="linenos">102</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="Board-103"><a href="#Board-103"><span class="linenos">103</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board-104"><a href="#Board-104"><span class="linenos">104</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board-105"><a href="#Board-105"><span class="linenos">105</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board-106"><a href="#Board-106"><span class="linenos">106</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board-107"><a href="#Board-107"><span class="linenos">107</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board-108"><a href="#Board-108"><span class="linenos">108</span></a>		<span class="k">return</span> <span class="kc">False</span>	
+</span><span id="Board-109"><a href="#Board-109"><span class="linenos">109</span></a>
+</span><span id="Board-110"><a href="#Board-110"><span class="linenos">110</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board-111"><a href="#Board-111"><span class="linenos">111</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board-112"><a href="#Board-112"><span class="linenos">112</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
+</span><span id="Board-113"><a href="#Board-113"><span class="linenos">113</span></a>
+</span><span id="Board-114"><a href="#Board-114"><span class="linenos">114</span></a><span class="sd">		Args:</span>
+</span><span id="Board-115"><a href="#Board-115"><span class="linenos">115</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="Board-116"><a href="#Board-116"><span class="linenos">116</span></a>
+</span><span id="Board-117"><a href="#Board-117"><span class="linenos">117</span></a><span class="sd">		Returns:</span>
+</span><span id="Board-118"><a href="#Board-118"><span class="linenos">118</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
+</span><span id="Board-119"><a href="#Board-119"><span class="linenos">119</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board-120"><a href="#Board-120"><span class="linenos">120</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+</span><span id="Board-121"><a href="#Board-121"><span class="linenos">121</span></a>	
+</span><span id="Board-122"><a href="#Board-122"><span class="linenos">122</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Board-123"><a href="#Board-123"><span class="linenos">123</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board-124"><a href="#Board-124"><span class="linenos">124</span></a><span class="sd">		Find the top open slot in a specific column.</span>
+</span><span id="Board-125"><a href="#Board-125"><span class="linenos">125</span></a>
+</span><span id="Board-126"><a href="#Board-126"><span class="linenos">126</span></a><span class="sd">		Args:</span>
+</span><span id="Board-127"><a href="#Board-127"><span class="linenos">127</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="Board-128"><a href="#Board-128"><span class="linenos">128</span></a>
+</span><span id="Board-129"><a href="#Board-129"><span class="linenos">129</span></a><span class="sd">		Returns:</span>
+</span><span id="Board-130"><a href="#Board-130"><span class="linenos">130</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
+</span><span id="Board-131"><a href="#Board-131"><span class="linenos">131</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board-132"><a href="#Board-132"><span class="linenos">132</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -327,12 +381,13 @@
 
     </div>
     <a class="headerlink" href="#Board.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.__init__-7"><a href="#Board.__init__-7"><span class="linenos"> 7</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="Board.__init__-8"><a href="#Board.__init__-8"><span class="linenos"> 8</span></a>		<span class="sd">&quot;&quot;&quot;Create an empty board object&quot;&quot;&quot;</span>
-</span><span id="Board.__init__-9"><a href="#Board.__init__-9"><span class="linenos"> 9</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">)]</span>
-</span><span id="Board.__init__-10"><a href="#Board.__init__-10"><span class="linenos">10</span></a>		<span class="sd">&quot;&quot;&quot;2D array board state. None for empty, else bool for the player.&quot;&quot;&quot;</span>
-</span><span id="Board.__init__-11"><a href="#Board.__init__-11"><span class="linenos">11</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">)]</span>
-</span><span id="Board.__init__-12"><a href="#Board.__init__-12"><span class="linenos">12</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.__init__-9"><a href="#Board.__init__-9"><span class="linenos"> 9</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Board.__init__-10"><a href="#Board.__init__-10"><span class="linenos">10</span></a>		<span class="sd">&quot;&quot;&quot;Create an empty board object&quot;&quot;&quot;</span>
+</span><span id="Board.__init__-11"><a href="#Board.__init__-11"><span class="linenos">11</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">)]</span>
+</span><span id="Board.__init__-12"><a href="#Board.__init__-12"><span class="linenos">12</span></a>		<span class="sd">&quot;&quot;&quot;2D array board state. None for empty, else bool for the player.&quot;&quot;&quot;</span>
+</span><span id="Board.__init__-13"><a href="#Board.__init__-13"><span class="linenos">13</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">)]</span>
+</span><span id="Board.__init__-14"><a href="#Board.__init__-14"><span class="linenos">14</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Board.__init__-15"><a href="#Board.__init__-15"><span class="linenos">15</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -387,6 +442,33 @@
 
 
                             </div>
+                            <div id="Board.undo" class="classattr">
+                                        <input id="Board.undo-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">undo</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span>)</span>
+
+                <label class="view-source-button" for="Board.undo-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Board.undo"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.undo-17"><a href="#Board.undo-17"><span class="linenos">17</span></a>	<span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Board.undo-18"><a href="#Board.undo-18"><span class="linenos">18</span></a>		<span class="sd">&quot;&quot;&quot;remove last play&quot;&quot;&quot;</span>
+</span><span id="Board.undo-19"><a href="#Board.undo-19"><span class="linenos">19</span></a>		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span><span class="c1">#if no pieces are on the board, do nothing</span>
+</span><span id="Board.undo-20"><a href="#Board.undo-20"><span class="linenos">20</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board.undo-21"><a href="#Board.undo-21"><span class="linenos">21</span></a>		<span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="Board.undo-22"><a href="#Board.undo-22"><span class="linenos">22</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="Board.undo-23"><a href="#Board.undo-23"><span class="linenos">23</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="Board.undo-24"><a href="#Board.undo-24"><span class="linenos">24</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>remove last play</p>
+</div>
+
+
+                            </div>
                             <div id="Board.move" class="classattr">
                                         <input id="Board.move-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -398,22 +480,23 @@
 
     </div>
     <a class="headerlink" href="#Board.move"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.move-14"><a href="#Board.move-14"><span class="linenos">14</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board.move-15"><a href="#Board.move-15"><span class="linenos">15</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board.move-16"><a href="#Board.move-16"><span class="linenos">16</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
-</span><span id="Board.move-17"><a href="#Board.move-17"><span class="linenos">17</span></a>
-</span><span id="Board.move-18"><a href="#Board.move-18"><span class="linenos">18</span></a><span class="sd">		Args:</span>
-</span><span id="Board.move-19"><a href="#Board.move-19"><span class="linenos">19</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
-</span><span id="Board.move-20"><a href="#Board.move-20"><span class="linenos">20</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board.move-21"><a href="#Board.move-21"><span class="linenos">21</span></a><span class="sd">		</span>
-</span><span id="Board.move-22"><a href="#Board.move-22"><span class="linenos">22</span></a><span class="sd">		Returns:</span>
-</span><span id="Board.move-23"><a href="#Board.move-23"><span class="linenos">23</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
-</span><span id="Board.move-24"><a href="#Board.move-24"><span class="linenos">24</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board.move-25"><a href="#Board.move-25"><span class="linenos">25</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
-</span><span id="Board.move-26"><a href="#Board.move-26"><span class="linenos">26</span></a>			<span class="k">return</span> <span class="kc">False</span>
-</span><span id="Board.move-27"><a href="#Board.move-27"><span class="linenos">27</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
-</span><span id="Board.move-28"><a href="#Board.move-28"><span class="linenos">28</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="Board.move-29"><a href="#Board.move-29"><span class="linenos">29</span></a>		<span class="k">return</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.move-27"><a href="#Board.move-27"><span class="linenos">27</span></a>	<span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board.move-28"><a href="#Board.move-28"><span class="linenos">28</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board.move-29"><a href="#Board.move-29"><span class="linenos">29</span></a><span class="sd">		Updates board object with given move, if the move is legal.</span>
+</span><span id="Board.move-30"><a href="#Board.move-30"><span class="linenos">30</span></a>
+</span><span id="Board.move-31"><a href="#Board.move-31"><span class="linenos">31</span></a><span class="sd">		Args:</span>
+</span><span id="Board.move-32"><a href="#Board.move-32"><span class="linenos">32</span></a><span class="sd">			col: The column the player wants to play a move on.</span>
+</span><span id="Board.move-33"><a href="#Board.move-33"><span class="linenos">33</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board.move-34"><a href="#Board.move-34"><span class="linenos">34</span></a><span class="sd">		</span>
+</span><span id="Board.move-35"><a href="#Board.move-35"><span class="linenos">35</span></a><span class="sd">		Returns:</span>
+</span><span id="Board.move-36"><a href="#Board.move-36"><span class="linenos">36</span></a><span class="sd">			A bool; hether the move was legal and therefore played.</span>
+</span><span id="Board.move-37"><a href="#Board.move-37"><span class="linenos">37</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board.move-38"><a href="#Board.move-38"><span class="linenos">38</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">colFull</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+</span><span id="Board.move-39"><a href="#Board.move-39"><span class="linenos">39</span></a>			<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board.move-40"><a href="#Board.move-40"><span class="linenos">40</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">turn</span>
+</span><span id="Board.move-41"><a href="#Board.move-41"><span class="linenos">41</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="Board.move-42"><a href="#Board.move-42"><span class="linenos">42</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</span><span id="Board.move-43"><a href="#Board.move-43"><span class="linenos">43</span></a>		<span class="k">return</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -440,24 +523,29 @@
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">checkWin</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">checkWin</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span></span><span class="return-annotation">) -> <span class="nb">int</span>:</span></span>
 
                 <label class="view-source-button" for="Board.checkWin-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Board.checkWin"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.checkWin-31"><a href="#Board.checkWin-31"><span class="linenos">31</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board.checkWin-32"><a href="#Board.checkWin-32"><span class="linenos">32</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board.checkWin-33"><a href="#Board.checkWin-33"><span class="linenos">33</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
-</span><span id="Board.checkWin-34"><a href="#Board.checkWin-34"><span class="linenos">34</span></a>
-</span><span id="Board.checkWin-35"><a href="#Board.checkWin-35"><span class="linenos">35</span></a><span class="sd">		Args:</span>
-</span><span id="Board.checkWin-36"><a href="#Board.checkWin-36"><span class="linenos">36</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board.checkWin-37"><a href="#Board.checkWin-37"><span class="linenos">37</span></a><span class="sd">		</span>
-</span><span id="Board.checkWin-38"><a href="#Board.checkWin-38"><span class="linenos">38</span></a><span class="sd">		Returns:</span>
-</span><span id="Board.checkWin-39"><a href="#Board.checkWin-39"><span class="linenos">39</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="Board.checkWin-40"><a href="#Board.checkWin-40"><span class="linenos">40</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board.checkWin-41"><a href="#Board.checkWin-41"><span class="linenos">41</span></a>		<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span>
-</span><span id="Board.checkWin-42"><a href="#Board.checkWin-42"><span class="linenos">42</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">over</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.checkWin-45"><a href="#Board.checkWin-45"><span class="linenos">45</span></a>	<span class="k">def</span> <span class="nf">checkWin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Board.checkWin-46"><a href="#Board.checkWin-46"><span class="linenos">46</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board.checkWin-47"><a href="#Board.checkWin-47"><span class="linenos">47</span></a><span class="sd">		Evaluate whether the moving player has won.</span>
+</span><span id="Board.checkWin-48"><a href="#Board.checkWin-48"><span class="linenos">48</span></a>
+</span><span id="Board.checkWin-49"><a href="#Board.checkWin-49"><span class="linenos">49</span></a><span class="sd">		Args:</span>
+</span><span id="Board.checkWin-50"><a href="#Board.checkWin-50"><span class="linenos">50</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board.checkWin-51"><a href="#Board.checkWin-51"><span class="linenos">51</span></a><span class="sd">		</span>
+</span><span id="Board.checkWin-52"><a href="#Board.checkWin-52"><span class="linenos">52</span></a><span class="sd">		Returns:</span>
+</span><span id="Board.checkWin-53"><a href="#Board.checkWin-53"><span class="linenos">53</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="Board.checkWin-54"><a href="#Board.checkWin-54"><span class="linenos">54</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board.checkWin-55"><a href="#Board.checkWin-55"><span class="linenos">55</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkWinAux</span><span class="p">(</span><span class="n">turn</span><span class="p">):</span>
+</span><span id="Board.checkWin-56"><a href="#Board.checkWin-56"><span class="linenos">56</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWin-57"><a href="#Board.checkWin-57"><span class="linenos">57</span></a>			<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">turn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="Board.checkWin-58"><a href="#Board.checkWin-58"><span class="linenos">58</span></a>		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkFull</span><span class="p">():</span>
+</span><span id="Board.checkWin-59"><a href="#Board.checkWin-59"><span class="linenos">59</span></a>			<span class="bp">self</span><span class="o">.</span><span class="n">over</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWin-60"><a href="#Board.checkWin-60"><span class="linenos">60</span></a>			<span class="k">return</span> <span class="mi">3</span>
+</span><span id="Board.checkWin-61"><a href="#Board.checkWin-61"><span class="linenos">61</span></a>		<span class="k">return</span> <span class="mi">0</span>
 </span></pre></div>
 
 
@@ -478,6 +566,31 @@
 
 
                             </div>
+                            <div id="Board.checkFull" class="classattr">
+                                        <input id="Board.checkFull-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">checkFull</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span>)</span>
+
+                <label class="view-source-button" for="Board.checkFull-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Board.checkFull"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.checkFull-63"><a href="#Board.checkFull-63"><span class="linenos">63</span></a>	<span class="k">def</span> <span class="nf">checkFull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Board.checkFull-64"><a href="#Board.checkFull-64"><span class="linenos">64</span></a>		<span class="sd">&quot;&quot;&quot;returns true if there is no more valid moves&quot;&quot;&quot;</span>
+</span><span id="Board.checkFull-65"><a href="#Board.checkFull-65"><span class="linenos">65</span></a>		<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">:</span>
+</span><span id="Board.checkFull-66"><a href="#Board.checkFull-66"><span class="linenos">66</span></a>			<span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+</span><span id="Board.checkFull-67"><a href="#Board.checkFull-67"><span class="linenos">67</span></a>				<span class="k">return</span> <span class="kc">False</span>
+</span><span id="Board.checkFull-68"><a href="#Board.checkFull-68"><span class="linenos">68</span></a>		<span class="k">return</span> <span class="kc">True</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>returns true if there is no more valid moves</p>
+</div>
+
+
+                            </div>
                             <div id="Board.checkWinAux" class="classattr">
                                         <input id="Board.checkWinAux-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -489,45 +602,45 @@
 
     </div>
     <a class="headerlink" href="#Board.checkWinAux"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.checkWinAux-44"><a href="#Board.checkWinAux-44"><span class="linenos">44</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board.checkWinAux-45"><a href="#Board.checkWinAux-45"><span class="linenos">45</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board.checkWinAux-46"><a href="#Board.checkWinAux-46"><span class="linenos">46</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
-</span><span id="Board.checkWinAux-47"><a href="#Board.checkWinAux-47"><span class="linenos">47</span></a>
-</span><span id="Board.checkWinAux-48"><a href="#Board.checkWinAux-48"><span class="linenos">48</span></a><span class="sd">		Args:</span>
-</span><span id="Board.checkWinAux-49"><a href="#Board.checkWinAux-49"><span class="linenos">49</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
-</span><span id="Board.checkWinAux-50"><a href="#Board.checkWinAux-50"><span class="linenos">50</span></a><span class="sd">		</span>
-</span><span id="Board.checkWinAux-51"><a href="#Board.checkWinAux-51"><span class="linenos">51</span></a><span class="sd">		Returns:</span>
-</span><span id="Board.checkWinAux-52"><a href="#Board.checkWinAux-52"><span class="linenos">52</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
-</span><span id="Board.checkWinAux-53"><a href="#Board.checkWinAux-53"><span class="linenos">53</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board.checkWinAux-54"><a href="#Board.checkWinAux-54"><span class="linenos">54</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-55"><a href="#Board.checkWinAux-55"><span class="linenos">55</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-56"><a href="#Board.checkWinAux-56"><span class="linenos">56</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-57"><a href="#Board.checkWinAux-57"><span class="linenos">57</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-58"><a href="#Board.checkWinAux-58"><span class="linenos">58</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board.checkWinAux-59"><a href="#Board.checkWinAux-59"><span class="linenos">59</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board.checkWinAux-60"><a href="#Board.checkWinAux-60"><span class="linenos">60</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-61"><a href="#Board.checkWinAux-61"><span class="linenos">61</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-62"><a href="#Board.checkWinAux-62"><span class="linenos">62</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-63"><a href="#Board.checkWinAux-63"><span class="linenos">63</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-64"><a href="#Board.checkWinAux-64"><span class="linenos">64</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-65"><a href="#Board.checkWinAux-65"><span class="linenos">65</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board.checkWinAux-66"><a href="#Board.checkWinAux-66"><span class="linenos">66</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board.checkWinAux-67"><a href="#Board.checkWinAux-67"><span class="linenos">67</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-68"><a href="#Board.checkWinAux-68"><span class="linenos">68</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-69"><a href="#Board.checkWinAux-69"><span class="linenos">69</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-70"><a href="#Board.checkWinAux-70"><span class="linenos">70</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-71"><a href="#Board.checkWinAux-71"><span class="linenos">71</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-72"><a href="#Board.checkWinAux-72"><span class="linenos">72</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board.checkWinAux-73"><a href="#Board.checkWinAux-73"><span class="linenos">73</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board.checkWinAux-74"><a href="#Board.checkWinAux-74"><span class="linenos">74</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-75"><a href="#Board.checkWinAux-75"><span class="linenos">75</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-76"><a href="#Board.checkWinAux-76"><span class="linenos">76</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-77"><a href="#Board.checkWinAux-77"><span class="linenos">77</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-78"><a href="#Board.checkWinAux-78"><span class="linenos">78</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
-</span><span id="Board.checkWinAux-79"><a href="#Board.checkWinAux-79"><span class="linenos">79</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
-</span><span id="Board.checkWinAux-80"><a href="#Board.checkWinAux-80"><span class="linenos">80</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
-</span><span id="Board.checkWinAux-81"><a href="#Board.checkWinAux-81"><span class="linenos">81</span></a>					<span class="k">return</span> <span class="kc">True</span>
-</span><span id="Board.checkWinAux-82"><a href="#Board.checkWinAux-82"><span class="linenos">82</span></a>		<span class="k">return</span> <span class="kc">False</span>	
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.checkWinAux-70"><a href="#Board.checkWinAux-70"><span class="linenos"> 70</span></a>	<span class="k">def</span> <span class="nf">checkWinAux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board.checkWinAux-71"><a href="#Board.checkWinAux-71"><span class="linenos"> 71</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board.checkWinAux-72"><a href="#Board.checkWinAux-72"><span class="linenos"> 72</span></a><span class="sd">		Auxiliary method to evaluate whether the moving player has won.</span>
+</span><span id="Board.checkWinAux-73"><a href="#Board.checkWinAux-73"><span class="linenos"> 73</span></a>
+</span><span id="Board.checkWinAux-74"><a href="#Board.checkWinAux-74"><span class="linenos"> 74</span></a><span class="sd">		Args:</span>
+</span><span id="Board.checkWinAux-75"><a href="#Board.checkWinAux-75"><span class="linenos"> 75</span></a><span class="sd">			turn: The moving player; False for player1 and True for player2.</span>
+</span><span id="Board.checkWinAux-76"><a href="#Board.checkWinAux-76"><span class="linenos"> 76</span></a><span class="sd">		</span>
+</span><span id="Board.checkWinAux-77"><a href="#Board.checkWinAux-77"><span class="linenos"> 77</span></a><span class="sd">		Returns:</span>
+</span><span id="Board.checkWinAux-78"><a href="#Board.checkWinAux-78"><span class="linenos"> 78</span></a><span class="sd">			A bool; whether the moving player has won in the current board state.</span>
+</span><span id="Board.checkWinAux-79"><a href="#Board.checkWinAux-79"><span class="linenos"> 79</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board.checkWinAux-80"><a href="#Board.checkWinAux-80"><span class="linenos"> 80</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-81"><a href="#Board.checkWinAux-81"><span class="linenos"> 81</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-82"><a href="#Board.checkWinAux-82"><span class="linenos"> 82</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-83"><a href="#Board.checkWinAux-83"><span class="linenos"> 83</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-84"><a href="#Board.checkWinAux-84"><span class="linenos"> 84</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board.checkWinAux-85"><a href="#Board.checkWinAux-85"><span class="linenos"> 85</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board.checkWinAux-86"><a href="#Board.checkWinAux-86"><span class="linenos"> 86</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-87"><a href="#Board.checkWinAux-87"><span class="linenos"> 87</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-88"><a href="#Board.checkWinAux-88"><span class="linenos"> 88</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-89"><a href="#Board.checkWinAux-89"><span class="linenos"> 89</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-90"><a href="#Board.checkWinAux-90"><span class="linenos"> 90</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-91"><a href="#Board.checkWinAux-91"><span class="linenos"> 91</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board.checkWinAux-92"><a href="#Board.checkWinAux-92"><span class="linenos"> 92</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board.checkWinAux-93"><a href="#Board.checkWinAux-93"><span class="linenos"> 93</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-94"><a href="#Board.checkWinAux-94"><span class="linenos"> 94</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-95"><a href="#Board.checkWinAux-95"><span class="linenos"> 95</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">cols</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-96"><a href="#Board.checkWinAux-96"><span class="linenos"> 96</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-97"><a href="#Board.checkWinAux-97"><span class="linenos"> 97</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-98"><a href="#Board.checkWinAux-98"><span class="linenos"> 98</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board.checkWinAux-99"><a href="#Board.checkWinAux-99"><span class="linenos"> 99</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board.checkWinAux-100"><a href="#Board.checkWinAux-100"><span class="linenos">100</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-101"><a href="#Board.checkWinAux-101"><span class="linenos">101</span></a>		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">-</span> <span class="n">Board</span><span class="o">.</span><span class="n">goal</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-102"><a href="#Board.checkWinAux-102"><span class="linenos">102</span></a>			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Board</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-103"><a href="#Board.checkWinAux-103"><span class="linenos">103</span></a>				<span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-104"><a href="#Board.checkWinAux-104"><span class="linenos">104</span></a>				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Board</span><span class="o">.</span><span class="n">goal</span><span class="p">):</span>
+</span><span id="Board.checkWinAux-105"><a href="#Board.checkWinAux-105"><span class="linenos">105</span></a>					<span class="n">win</span> <span class="o">=</span> <span class="n">win</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">turn</span>
+</span><span id="Board.checkWinAux-106"><a href="#Board.checkWinAux-106"><span class="linenos">106</span></a>				<span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+</span><span id="Board.checkWinAux-107"><a href="#Board.checkWinAux-107"><span class="linenos">107</span></a>					<span class="k">return</span> <span class="kc">True</span>
+</span><span id="Board.checkWinAux-108"><a href="#Board.checkWinAux-108"><span class="linenos">108</span></a>		<span class="k">return</span> <span class="kc">False</span>	
 </span></pre></div>
 
 
@@ -559,17 +672,17 @@
 
     </div>
     <a class="headerlink" href="#Board.colFull"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.colFull-84"><a href="#Board.colFull-84"><span class="linenos">84</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Board.colFull-85"><a href="#Board.colFull-85"><span class="linenos">85</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board.colFull-86"><a href="#Board.colFull-86"><span class="linenos">86</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
-</span><span id="Board.colFull-87"><a href="#Board.colFull-87"><span class="linenos">87</span></a>
-</span><span id="Board.colFull-88"><a href="#Board.colFull-88"><span class="linenos">88</span></a><span class="sd">		Args:</span>
-</span><span id="Board.colFull-89"><a href="#Board.colFull-89"><span class="linenos">89</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="Board.colFull-90"><a href="#Board.colFull-90"><span class="linenos">90</span></a>
-</span><span id="Board.colFull-91"><a href="#Board.colFull-91"><span class="linenos">91</span></a><span class="sd">		Returns:</span>
-</span><span id="Board.colFull-92"><a href="#Board.colFull-92"><span class="linenos">92</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
-</span><span id="Board.colFull-93"><a href="#Board.colFull-93"><span class="linenos">93</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board.colFull-94"><a href="#Board.colFull-94"><span class="linenos">94</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.colFull-110"><a href="#Board.colFull-110"><span class="linenos">110</span></a>	<span class="k">def</span> <span class="nf">colFull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Board.colFull-111"><a href="#Board.colFull-111"><span class="linenos">111</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board.colFull-112"><a href="#Board.colFull-112"><span class="linenos">112</span></a><span class="sd">		Evaluate whether a specific column is full of pieces.</span>
+</span><span id="Board.colFull-113"><a href="#Board.colFull-113"><span class="linenos">113</span></a>
+</span><span id="Board.colFull-114"><a href="#Board.colFull-114"><span class="linenos">114</span></a><span class="sd">		Args:</span>
+</span><span id="Board.colFull-115"><a href="#Board.colFull-115"><span class="linenos">115</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="Board.colFull-116"><a href="#Board.colFull-116"><span class="linenos">116</span></a>
+</span><span id="Board.colFull-117"><a href="#Board.colFull-117"><span class="linenos">117</span></a><span class="sd">		Returns:</span>
+</span><span id="Board.colFull-118"><a href="#Board.colFull-118"><span class="linenos">118</span></a><span class="sd">			A bool; whether the column is already filled with pieces.</span>
+</span><span id="Board.colFull-119"><a href="#Board.colFull-119"><span class="linenos">119</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board.colFull-120"><a href="#Board.colFull-120"><span class="linenos">120</span></a>		<span class="k">return</span> <span class="n">Board</span><span class="o">.</span><span class="n">rows</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -601,17 +714,17 @@
 
     </div>
     <a class="headerlink" href="#Board.top"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.top-96"><a href="#Board.top-96"><span class="linenos"> 96</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="Board.top-97"><a href="#Board.top-97"><span class="linenos"> 97</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Board.top-98"><a href="#Board.top-98"><span class="linenos"> 98</span></a><span class="sd">		Find the top open slot in a specific column.</span>
-</span><span id="Board.top-99"><a href="#Board.top-99"><span class="linenos"> 99</span></a>
-</span><span id="Board.top-100"><a href="#Board.top-100"><span class="linenos">100</span></a><span class="sd">		Args:</span>
-</span><span id="Board.top-101"><a href="#Board.top-101"><span class="linenos">101</span></a><span class="sd">			col: The column which is in question.</span>
-</span><span id="Board.top-102"><a href="#Board.top-102"><span class="linenos">102</span></a>
-</span><span id="Board.top-103"><a href="#Board.top-103"><span class="linenos">103</span></a><span class="sd">		Returns:</span>
-</span><span id="Board.top-104"><a href="#Board.top-104"><span class="linenos">104</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
-</span><span id="Board.top-105"><a href="#Board.top-105"><span class="linenos">105</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="Board.top-106"><a href="#Board.top-106"><span class="linenos">106</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Board.top-122"><a href="#Board.top-122"><span class="linenos">122</span></a>	<span class="k">def</span> <span class="nf">top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Board.top-123"><a href="#Board.top-123"><span class="linenos">123</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Board.top-124"><a href="#Board.top-124"><span class="linenos">124</span></a><span class="sd">		Find the top open slot in a specific column.</span>
+</span><span id="Board.top-125"><a href="#Board.top-125"><span class="linenos">125</span></a>
+</span><span id="Board.top-126"><a href="#Board.top-126"><span class="linenos">126</span></a><span class="sd">		Args:</span>
+</span><span id="Board.top-127"><a href="#Board.top-127"><span class="linenos">127</span></a><span class="sd">			col: The column which is in question.</span>
+</span><span id="Board.top-128"><a href="#Board.top-128"><span class="linenos">128</span></a>
+</span><span id="Board.top-129"><a href="#Board.top-129"><span class="linenos">129</span></a><span class="sd">		Returns:</span>
+</span><span id="Board.top-130"><a href="#Board.top-130"><span class="linenos">130</span></a><span class="sd">			An integer; the number of pieces already in the column.</span>
+</span><span id="Board.top-131"><a href="#Board.top-131"><span class="linenos">131</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="Board.top-132"><a href="#Board.top-132"><span class="linenos">132</span></a>		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
 </span></pre></div>
 
 

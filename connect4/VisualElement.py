@@ -2,6 +2,7 @@ import pygame
 
 class VisualElement:
 	def __init__(self, canvasWidth=700, canvasHeight=700, scale=1.0, refreshRate=60) -> None:
+		"constructor"
 		self.canvasWidth = canvasWidth
 		self.canvasHeight = canvasHeight
 		self.scale = scale

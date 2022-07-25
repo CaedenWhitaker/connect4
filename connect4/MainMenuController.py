@@ -11,6 +11,7 @@ from connect4.GameDatabase import GameDatabase
 class MainMenuController:
 	
 	def __init__(self, scale:float, size=(700,700)):
+		"constructor"
 		self.size = size[0] * scale, size[1] * scale
 		self.scale = scale
 		self.player1 = 0
@@ -38,6 +39,7 @@ class MainMenuController:
 		self._draw_info_layout()
 
 	def scale_theme(self, theme:dict):
+		"do necessary rescaling math for drawing"
 		if "title_font" in theme:
 			theme["title_font"] = pygame.font.SysFont(None, int(145 * self.scale))
 		if "title_font_size" in theme:
@@ -48,6 +50,7 @@ class MainMenuController:
 		
 	
 	def _make_main_menu(self, theme):
+		"layout the main menu"
 		self.main_menu = pygame_menu.Menu("Connect4", *self.size, theme=theme)
 		self.main_menu.add.button("Local", action=self.open_local_menu)
 		
@@ -56,6 +59,7 @@ class MainMenuController:
 		self.main_menu.add.button("Exit", action=pygame_menu.events.EXIT)
 
 	def _make_local_menu(self, theme):
+		"layout the local menu"
 		valid_chars = list(string.ascii_letters + string.digits)
 		min_col_width = int(300*self.scale)
 		self.local_menu = pygame_menu.Menu("Local Play", *self.size, columns=2, rows=5,
@@ -93,12 +97,13 @@ class MainMenuController:
 			widget.set_onmouseleave(self.update_names)
 		
 	def process_db_info(self):
+		"load games from the db"
 		for game in GameDatabase().getMatches():
 			self.games.append((game["start"], game))
 
 	
 	def _make_replay_menu(self):
-
+		"layout the replay men"
 		self.replay_menu = pygame_menu.Menu("Select a game to replay", *self.size, center_content=False, columns=2, rows=1)
 		if len(self.games) > 0:
 			self.replay_menu.add.dropselect("Game:", self.games[::-1], (len(self.games)-1), onchange=self.update_info)
@@ -106,6 +111,7 @@ class MainMenuController:
 
 
 	def update_names(self):
+		"change names according to the player"
 		if self.player1 == 0:
 			self.local_menu.get_widget("p1name").set_value(self.player1_name)
 		else:
@@ -116,6 +122,7 @@ class MainMenuController:
 			self.local_menu.get_widget("p2name").set_value("CPU")
 	
 	def set_player1(self, value:tuple):
+		"this should be DRY but I didn't write it -cgw"
 		self.player1 = value[1]
 		if self.player1 == 1:
 			self.local_menu.get_widget("p1name").set_value("CP1")
@@ -133,6 +140,7 @@ class MainMenuController:
 			
 	
 	def p1_change_name(self, value:str):
+		"update name based on user input"
 		if self.player1 == 1:
 			return
 		if len(value) < 3:
@@ -141,6 +149,7 @@ class MainMenuController:
 		self.player1_name = value.upper()
 
 	def set_player2(self, value:tuple):
+		"setup appropriate player info"
 		self.player2 = value[1]
 		if self.player2 == 1:
 			self.local_menu.get_widget("p2name").set_value("CP2")
@@ -157,6 +166,7 @@ class MainMenuController:
 			self.local_menu.get_widget("none2r").show()
 	
 	def p2_change_name(self, value:str):
+		"change the p2 name based on user input"
 		if self.player2 == 1:
 			return
 		if len(value) < 3:
@@ -165,9 +175,11 @@ class MainMenuController:
 		self.player2_name = value.upper()
 	
 	def cp1_change_diff(self, diff_lvl):
+		"legit this could just be a line not a method -cgw"
 		self.cp1_diff = diff_lvl
 	
 	def cp2_change_diff(self, diff_lvl):
+		"change cp2 difficulty"
 		self.cp2_diff = diff_lvl
 	
 	def open_local_menu(self):
@@ -196,6 +208,7 @@ class MainMenuController:
 		
 	
 	def update_info(self, something, info:dict):
+		"redraw menu when new game is selected"
 		self.info_surf.fill((0,0,0))
 		self._draw_info_layout()
 		self.replay_info = info
@@ -206,34 +219,44 @@ class MainMenuController:
 		kNumberOfMoves = "moves"
 		kWinType = "winner"
 		winner_label_size = self.font.size("Winner: ")
+		records = GameDatabase().getPlayers()
 		
 
 		if info[kPlayer1Type] == "H":
-			p1_name_label = self.font.render(info[kPlayer1Name], True, (255,0,0))
+			p1name = info['p1name']
+			p1record = records[p1name]
+			p1_name_label = self.font.render(f"{info[kPlayer1Name]}: {p1record['wins']}-{p1record['losses']}-{p1record['draws']}", True, (255,0,0))
 			p1_type_label = self.font.render("Human", True, (255,0,0))
 		if info[kPlayer1Type] == "C":
+			p1name = info['p1name']
+			p1record = records[p1name]
 			diff = info[kPlayer1Name][-1]
-			p1_name_label = self.font.render(info[kPlayer1Name][:-1] + "1", True, (255,0,0))
+			p1_name_label = self.font.render(f"{info[kPlayer1Name]}: {p1record['wins']}-{p1record['losses']}-{p1record['draws']}", True, (255,0,0))
 			p1_type_label = self.font.render("Computer: " + diff, True, (255,0,0))
 		
 		
 		if info[kPlayer2Type] == "H":
-			p2_name_label = self.font.render(info[kPlayer2Name], True, (0,0,255))
+			p2name = info['p2name']
+			p2record = records[p2name]
+			p2_name_label = self.font.render(f"{info[kPlayer2Name]}: {p2record['wins']}-{p2record['losses']}-{p2record['draws']}", True, (0,0,255))
 			p2_type_label = self.font.render("Human", True, (0,0,255))
 		if info[kPlayer2Type] == "C":
+			p2name = info['p2name']
+			p2record = records[p2name]
 			diff = info[kPlayer2Name][-1]
-			p2_name_label = self.font.render(info[kPlayer2Name][:-1] + "2", True, (0,0,255))
+			p2_name_label = self.font.render(f"{info[kPlayer2Name]}: {p2record['wins']}-{p2record['losses']}-{p2record['draws']}", True, (0,0,255))
 			p2_type_label = self.font.render("Computer: " + diff, True, (0,0,255))
 		
 		moves_label = self.font.render(str(len(info[kNumberOfMoves])), True, (255,255,255))
 		if info[kWinType] == 0:
 			winner_label = self.font.render("Unfinished", True, (255,255,255))
 		if info[kWinType] == 1:
-			winner_label = p1_name_label
+			winner_label = self.font.render(f"{info[kPlayer1Name]}", True, (255,0,0))
 		if info[kWinType] == 2:
-			winner_label = p2_name_label
+			winner_label = self.font.render(f"{info[kPlayer2Name]}", True, (0,0,255))
 		if info[kWinType] == 3:
 			winner_label = self.font.render("Tie", True, (255,255,255))
+
 		
 		start_y = 100 
 		self.info_surf.blit(p1_name_label, (self.x1, start_y * self.scale))
@@ -250,6 +273,7 @@ class MainMenuController:
 	
 	
 	def mainloop(self, window:pygame.Surface):
+		"draw the window and redirect events"
 		self.loop = True
 		while self.loop:
 			self.clock.tick(30)

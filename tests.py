@@ -1,36 +1,29 @@
 from connect4.Board import Board
 from connect4.AIPlayer import AIPlayer
+from connect4.HumanPlayer import HumanPlayer
 from connect4.Match import Match
 from connect4.VisualElement import VisualElement
 
-def test_AIPlayer_policyTreeSearch():
-	player = AIPlayer("CP1")
-	player.state.move(0)
-	move = player.policyTreeSearch()
-	print(move)
+import sys
+import inspect
 
-def test_AIPlayer_getNextMove():
-	player = AIPlayer()
-	board = Board()
-	for _ in range(10):
-		while True:
-			col = player.getNextMove(board)
-			if col is not None:
-				break
-		assert board.move(col, False)
-		assert board.move(col, True)
+def test_AIPlayer___init__():
+	player = AIPlayer("saghwe", 43)
+	assert player.name == "saghwe"
+	assert player.difficulty == 43
+	player = AIPlayer("dsagds")
+	assert player.name == "dsagds"
+	assert player.difficulty > 0
 
 
 def test_AIPlayer_getHeldPiece():
-	player = AIPlayer()
+	player = AIPlayer("name")
 	for _ in range(100):
 		assert 0 <= player.getHeldPiece() <= 1
 
-def test_Match_xToCol():
-	match = Match(AIPlayer(), AIPlayer(), Board())
-	assert match.xToCol(0) == 0
-	assert match.xToCol(300) == 3
-	assert match.xToCol(699) == 7
+def test_HumanPlayer___init__():
+	player = HumanPlayer("asodijg")
+	assert player.name == "asodijg"
 
 def test_VisualElement_rescale():
 	assert VisualElement.rescale((100,150,40.5), 0.5, True) == (50, 75, 20)
@@ -66,8 +59,7 @@ def test_board_checkWin_vert():
 	#act
 
 	#assert
-	assert board.checkWin(True) == True
-	assert board.checkWin(False) == False
+	assert board.checkWin(True) == 2
 
 def test_board_checkWin_horiz():
 	#this test goes for checkWinAux as well
@@ -156,14 +148,6 @@ def test_board_top():
 
 
 if __name__ == "__main__":
-	test_AIPlayer_policyTreeSearch()
-	# test_AIPlayer_getHeldPiece()
-	# test_AIPlayer_getNextMove()
-	# test_Match_xToCol()
-	# test_VisualElement_rescale()
-	# test_board_move()
-	# test_board_checkWin_vert()
-	# test_board_checkWin_horiz()
-	# test_board_checkWin_diag()
-	# test_board_colFull()
-	# test_board_top()
+	tests = [function for function in inspect.getmembers(sys.modules[__name__]) if function[0].startswith("test")]
+	for test in tests:
+		test[1]()

@@ -14,6 +14,7 @@ class Board:
 		self.moves:list[int] = list()
 	
 	def undo(self):
+		"""remove last play"""
 		if len(self.moves) == 0:#if no pieces are on the board, do nothing
 			return False
 		col = self.moves.pop()
@@ -59,6 +60,7 @@ class Board:
 		return 0
 	
 	def checkFull(self):
+		"""returns true if there is no more valid moves"""
 		for col in self.heights:
 			if col < Board.rows:
 				return False

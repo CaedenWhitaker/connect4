@@ -100,8 +100,8 @@
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>	<span class="p">]</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>	<span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">		This method iterates over the game events, filters out any non-mouse related</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">		events, and calls on a listeners onClick method</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">		This static method iterates over the game events, filters out any </span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">		non-mouse related events, and calls on a listeners onClick method</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">		@param events: the pygame events for the frame</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">		@returns: None</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">		@type: None</span>
@@ -116,37 +116,40 @@
 </span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>				<span class="n">listener</span><span class="o">.</span><span class="n">onClick</span><span class="p">()</span>
 </span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
 </span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>		<span class="k">pass</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">		@returns: None</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">		@type: None</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">		@returns: None</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">		@type: None</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>	
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">		@type: tuple[int, int]</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>		<span class="s2">&quot;constructor&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>		<span class="k">pass</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">		@returns: None</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">		@type: None</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">		@returns: None</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">		@type: None</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>	
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>		<span class="s2">&quot;remove all open mouse listeners&quot;</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>		<span class="s2">&quot;interface method&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">		@type: tuple[int, int]</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -173,8 +176,8 @@
 </span><span id="MouseListener-12"><a href="#MouseListener-12"><span class="linenos">12</span></a>	<span class="p">]</span>
 </span><span id="MouseListener-13"><a href="#MouseListener-13"><span class="linenos">13</span></a>	<span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
 </span><span id="MouseListener-14"><a href="#MouseListener-14"><span class="linenos">14</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener-15"><a href="#MouseListener-15"><span class="linenos">15</span></a><span class="sd">		This method iterates over the game events, filters out any non-mouse related</span>
-</span><span id="MouseListener-16"><a href="#MouseListener-16"><span class="linenos">16</span></a><span class="sd">		events, and calls on a listeners onClick method</span>
+</span><span id="MouseListener-15"><a href="#MouseListener-15"><span class="linenos">15</span></a><span class="sd">		This static method iterates over the game events, filters out any </span>
+</span><span id="MouseListener-16"><a href="#MouseListener-16"><span class="linenos">16</span></a><span class="sd">		non-mouse related events, and calls on a listeners onClick method</span>
 </span><span id="MouseListener-17"><a href="#MouseListener-17"><span class="linenos">17</span></a><span class="sd">		@param events: the pygame events for the frame</span>
 </span><span id="MouseListener-18"><a href="#MouseListener-18"><span class="linenos">18</span></a><span class="sd">		@returns: None</span>
 </span><span id="MouseListener-19"><a href="#MouseListener-19"><span class="linenos">19</span></a><span class="sd">		@type: None</span>
@@ -189,37 +192,40 @@
 </span><span id="MouseListener-28"><a href="#MouseListener-28"><span class="linenos">28</span></a>				<span class="n">listener</span><span class="o">.</span><span class="n">onClick</span><span class="p">()</span>
 </span><span id="MouseListener-29"><a href="#MouseListener-29"><span class="linenos">29</span></a>
 </span><span id="MouseListener-30"><a href="#MouseListener-30"><span class="linenos">30</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MouseListener-31"><a href="#MouseListener-31"><span class="linenos">31</span></a>		<span class="k">pass</span>
-</span><span id="MouseListener-32"><a href="#MouseListener-32"><span class="linenos">32</span></a>
-</span><span id="MouseListener-33"><a href="#MouseListener-33"><span class="linenos">33</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener-34"><a href="#MouseListener-34"><span class="linenos">34</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener-35"><a href="#MouseListener-35"><span class="linenos">35</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
-</span><span id="MouseListener-36"><a href="#MouseListener-36"><span class="linenos">36</span></a><span class="sd">		@returns: None</span>
-</span><span id="MouseListener-37"><a href="#MouseListener-37"><span class="linenos">37</span></a><span class="sd">		@type: None</span>
-</span><span id="MouseListener-38"><a href="#MouseListener-38"><span class="linenos">38</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener-39"><a href="#MouseListener-39"><span class="linenos">39</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="MouseListener-40"><a href="#MouseListener-40"><span class="linenos">40</span></a>
-</span><span id="MouseListener-41"><a href="#MouseListener-41"><span class="linenos">41</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener-42"><a href="#MouseListener-42"><span class="linenos">42</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener-43"><a href="#MouseListener-43"><span class="linenos">43</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
-</span><span id="MouseListener-44"><a href="#MouseListener-44"><span class="linenos">44</span></a><span class="sd">		@returns: None</span>
-</span><span id="MouseListener-45"><a href="#MouseListener-45"><span class="linenos">45</span></a><span class="sd">		@type: None</span>
-</span><span id="MouseListener-46"><a href="#MouseListener-46"><span class="linenos">46</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener-47"><a href="#MouseListener-47"><span class="linenos">47</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</span><span id="MouseListener-48"><a href="#MouseListener-48"><span class="linenos">48</span></a>	
-</span><span id="MouseListener-49"><a href="#MouseListener-49"><span class="linenos">49</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
-</span><span id="MouseListener-50"><a href="#MouseListener-50"><span class="linenos">50</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="MouseListener-51"><a href="#MouseListener-51"><span class="linenos">51</span></a>
-</span><span id="MouseListener-52"><a href="#MouseListener-52"><span class="linenos">52</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener-53"><a href="#MouseListener-53"><span class="linenos">53</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
-</span><span id="MouseListener-54"><a href="#MouseListener-54"><span class="linenos">54</span></a>
-</span><span id="MouseListener-55"><a href="#MouseListener-55"><span class="linenos">55</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
-</span><span id="MouseListener-56"><a href="#MouseListener-56"><span class="linenos">56</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener-57"><a href="#MouseListener-57"><span class="linenos">57</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
-</span><span id="MouseListener-58"><a href="#MouseListener-58"><span class="linenos">58</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
-</span><span id="MouseListener-59"><a href="#MouseListener-59"><span class="linenos">59</span></a><span class="sd">		@type: tuple[int, int]</span>
-</span><span id="MouseListener-60"><a href="#MouseListener-60"><span class="linenos">60</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener-61"><a href="#MouseListener-61"><span class="linenos">61</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+</span><span id="MouseListener-31"><a href="#MouseListener-31"><span class="linenos">31</span></a>		<span class="s2">&quot;constructor&quot;</span>
+</span><span id="MouseListener-32"><a href="#MouseListener-32"><span class="linenos">32</span></a>		<span class="k">pass</span>
+</span><span id="MouseListener-33"><a href="#MouseListener-33"><span class="linenos">33</span></a>
+</span><span id="MouseListener-34"><a href="#MouseListener-34"><span class="linenos">34</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener-35"><a href="#MouseListener-35"><span class="linenos">35</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener-36"><a href="#MouseListener-36"><span class="linenos">36</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
+</span><span id="MouseListener-37"><a href="#MouseListener-37"><span class="linenos">37</span></a><span class="sd">		@returns: None</span>
+</span><span id="MouseListener-38"><a href="#MouseListener-38"><span class="linenos">38</span></a><span class="sd">		@type: None</span>
+</span><span id="MouseListener-39"><a href="#MouseListener-39"><span class="linenos">39</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener-40"><a href="#MouseListener-40"><span class="linenos">40</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="MouseListener-41"><a href="#MouseListener-41"><span class="linenos">41</span></a>
+</span><span id="MouseListener-42"><a href="#MouseListener-42"><span class="linenos">42</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener-43"><a href="#MouseListener-43"><span class="linenos">43</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener-44"><a href="#MouseListener-44"><span class="linenos">44</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
+</span><span id="MouseListener-45"><a href="#MouseListener-45"><span class="linenos">45</span></a><span class="sd">		@returns: None</span>
+</span><span id="MouseListener-46"><a href="#MouseListener-46"><span class="linenos">46</span></a><span class="sd">		@type: None</span>
+</span><span id="MouseListener-47"><a href="#MouseListener-47"><span class="linenos">47</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener-48"><a href="#MouseListener-48"><span class="linenos">48</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span id="MouseListener-49"><a href="#MouseListener-49"><span class="linenos">49</span></a>	
+</span><span id="MouseListener-50"><a href="#MouseListener-50"><span class="linenos">50</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
+</span><span id="MouseListener-51"><a href="#MouseListener-51"><span class="linenos">51</span></a>		<span class="s2">&quot;remove all open mouse listeners&quot;</span>
+</span><span id="MouseListener-52"><a href="#MouseListener-52"><span class="linenos">52</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="MouseListener-53"><a href="#MouseListener-53"><span class="linenos">53</span></a>
+</span><span id="MouseListener-54"><a href="#MouseListener-54"><span class="linenos">54</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener-55"><a href="#MouseListener-55"><span class="linenos">55</span></a>		<span class="s2">&quot;interface method&quot;</span>
+</span><span id="MouseListener-56"><a href="#MouseListener-56"><span class="linenos">56</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</span><span id="MouseListener-57"><a href="#MouseListener-57"><span class="linenos">57</span></a>
+</span><span id="MouseListener-58"><a href="#MouseListener-58"><span class="linenos">58</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
+</span><span id="MouseListener-59"><a href="#MouseListener-59"><span class="linenos">59</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener-60"><a href="#MouseListener-60"><span class="linenos">60</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
+</span><span id="MouseListener-61"><a href="#MouseListener-61"><span class="linenos">61</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
+</span><span id="MouseListener-62"><a href="#MouseListener-62"><span class="linenos">62</span></a><span class="sd">		@type: tuple[int, int]</span>
+</span><span id="MouseListener-63"><a href="#MouseListener-63"><span class="linenos">63</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener-64"><a href="#MouseListener-64"><span class="linenos">64</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -236,11 +242,14 @@
     </div>
     <a class="headerlink" href="#MouseListener.__init__"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.__init__-30"><a href="#MouseListener.__init__-30"><span class="linenos">30</span></a>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="MouseListener.__init__-31"><a href="#MouseListener.__init__-31"><span class="linenos">31</span></a>		<span class="k">pass</span>
+</span><span id="MouseListener.__init__-31"><a href="#MouseListener.__init__-31"><span class="linenos">31</span></a>		<span class="s2">&quot;constructor&quot;</span>
+</span><span id="MouseListener.__init__-32"><a href="#MouseListener.__init__-32"><span class="linenos">32</span></a>		<span class="k">pass</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>constructor</p>
+</div>
+
 
                             </div>
                             <div id="MouseListener.listeners" class="classattr">
@@ -289,8 +298,8 @@
     <a class="headerlink" href="#MouseListener.listen"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.listen-13"><a href="#MouseListener.listen-13"><span class="linenos">13</span></a>	<span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
 </span><span id="MouseListener.listen-14"><a href="#MouseListener.listen-14"><span class="linenos">14</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener.listen-15"><a href="#MouseListener.listen-15"><span class="linenos">15</span></a><span class="sd">		This method iterates over the game events, filters out any non-mouse related</span>
-</span><span id="MouseListener.listen-16"><a href="#MouseListener.listen-16"><span class="linenos">16</span></a><span class="sd">		events, and calls on a listeners onClick method</span>
+</span><span id="MouseListener.listen-15"><a href="#MouseListener.listen-15"><span class="linenos">15</span></a><span class="sd">		This static method iterates over the game events, filters out any </span>
+</span><span id="MouseListener.listen-16"><a href="#MouseListener.listen-16"><span class="linenos">16</span></a><span class="sd">		non-mouse related events, and calls on a listeners onClick method</span>
 </span><span id="MouseListener.listen-17"><a href="#MouseListener.listen-17"><span class="linenos">17</span></a><span class="sd">		@param events: the pygame events for the frame</span>
 </span><span id="MouseListener.listen-18"><a href="#MouseListener.listen-18"><span class="linenos">18</span></a><span class="sd">		@returns: None</span>
 </span><span id="MouseListener.listen-19"><a href="#MouseListener.listen-19"><span class="linenos">19</span></a><span class="sd">		@type: None</span>
@@ -306,8 +315,8 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>This method iterates over the game events, filters out any non-mouse related
-events, and calls on a listeners onClick method
+            <div class="docstring"><p>This static method iterates over the game events, filters out any 
+non-mouse related events, and calls on a listeners onClick method
 @param events: the pygame events for the frame
 @returns: None
 @type: None</p>
@@ -326,13 +335,13 @@ events, and calls on a listeners onClick method
 
     </div>
     <a class="headerlink" href="#MouseListener.register"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.register-33"><a href="#MouseListener.register-33"><span class="linenos">33</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener.register-34"><a href="#MouseListener.register-34"><span class="linenos">34</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener.register-35"><a href="#MouseListener.register-35"><span class="linenos">35</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
-</span><span id="MouseListener.register-36"><a href="#MouseListener.register-36"><span class="linenos">36</span></a><span class="sd">		@returns: None</span>
-</span><span id="MouseListener.register-37"><a href="#MouseListener.register-37"><span class="linenos">37</span></a><span class="sd">		@type: None</span>
-</span><span id="MouseListener.register-38"><a href="#MouseListener.register-38"><span class="linenos">38</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener.register-39"><a href="#MouseListener.register-39"><span class="linenos">39</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.register-34"><a href="#MouseListener.register-34"><span class="linenos">34</span></a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener.register-35"><a href="#MouseListener.register-35"><span class="linenos">35</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener.register-36"><a href="#MouseListener.register-36"><span class="linenos">36</span></a><span class="sd">		This method adds the caller to the global list of listeners</span>
+</span><span id="MouseListener.register-37"><a href="#MouseListener.register-37"><span class="linenos">37</span></a><span class="sd">		@returns: None</span>
+</span><span id="MouseListener.register-38"><a href="#MouseListener.register-38"><span class="linenos">38</span></a><span class="sd">		@type: None</span>
+</span><span id="MouseListener.register-39"><a href="#MouseListener.register-39"><span class="linenos">39</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener.register-40"><a href="#MouseListener.register-40"><span class="linenos">40</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -354,13 +363,13 @@ events, and calls on a listeners onClick method
 
     </div>
     <a class="headerlink" href="#MouseListener.deregister"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.deregister-41"><a href="#MouseListener.deregister-41"><span class="linenos">41</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener.deregister-42"><a href="#MouseListener.deregister-42"><span class="linenos">42</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener.deregister-43"><a href="#MouseListener.deregister-43"><span class="linenos">43</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
-</span><span id="MouseListener.deregister-44"><a href="#MouseListener.deregister-44"><span class="linenos">44</span></a><span class="sd">		@returns: None</span>
-</span><span id="MouseListener.deregister-45"><a href="#MouseListener.deregister-45"><span class="linenos">45</span></a><span class="sd">		@type: None</span>
-</span><span id="MouseListener.deregister-46"><a href="#MouseListener.deregister-46"><span class="linenos">46</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener.deregister-47"><a href="#MouseListener.deregister-47"><span class="linenos">47</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.deregister-42"><a href="#MouseListener.deregister-42"><span class="linenos">42</span></a>	<span class="k">def</span> <span class="nf">deregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener.deregister-43"><a href="#MouseListener.deregister-43"><span class="linenos">43</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener.deregister-44"><a href="#MouseListener.deregister-44"><span class="linenos">44</span></a><span class="sd">		This method removes the caller to the global list of listeners</span>
+</span><span id="MouseListener.deregister-45"><a href="#MouseListener.deregister-45"><span class="linenos">45</span></a><span class="sd">		@returns: None</span>
+</span><span id="MouseListener.deregister-46"><a href="#MouseListener.deregister-46"><span class="linenos">46</span></a><span class="sd">		@type: None</span>
+</span><span id="MouseListener.deregister-47"><a href="#MouseListener.deregister-47"><span class="linenos">47</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener.deregister-48"><a href="#MouseListener.deregister-48"><span class="linenos">48</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -382,12 +391,15 @@ events, and calls on a listeners onClick method
 
     </div>
     <a class="headerlink" href="#MouseListener.clear"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.clear-49"><a href="#MouseListener.clear-49"><span class="linenos">49</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
-</span><span id="MouseListener.clear-50"><a href="#MouseListener.clear-50"><span class="linenos">50</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.clear-50"><a href="#MouseListener.clear-50"><span class="linenos">50</span></a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">():</span>
+</span><span id="MouseListener.clear-51"><a href="#MouseListener.clear-51"><span class="linenos">51</span></a>		<span class="s2">&quot;remove all open mouse listeners&quot;</span>
+</span><span id="MouseListener.clear-52"><a href="#MouseListener.clear-52"><span class="linenos">52</span></a>		<span class="n">MouseListener</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>remove all open mouse listeners</p>
+</div>
+
 
                             </div>
                             <div id="MouseListener.onClick" class="classattr">
@@ -401,12 +413,15 @@ events, and calls on a listeners onClick method
 
     </div>
     <a class="headerlink" href="#MouseListener.onClick"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.onClick-52"><a href="#MouseListener.onClick-52"><span class="linenos">52</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="MouseListener.onClick-53"><a href="#MouseListener.onClick-53"><span class="linenos">53</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.onClick-54"><a href="#MouseListener.onClick-54"><span class="linenos">54</span></a>	<span class="k">def</span> <span class="nf">onClick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="MouseListener.onClick-55"><a href="#MouseListener.onClick-55"><span class="linenos">55</span></a>		<span class="s2">&quot;interface method&quot;</span>
+</span><span id="MouseListener.onClick-56"><a href="#MouseListener.onClick-56"><span class="linenos">56</span></a>		<span class="k">raise</span> <span class="ne">NotImplementedError</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>interface method</p>
+</div>
+
 
                             </div>
                             <div id="MouseListener.getMousePosition" class="classattr">
@@ -420,13 +435,13 @@ events, and calls on a listeners onClick method
 
     </div>
     <a class="headerlink" href="#MouseListener.getMousePosition"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.getMousePosition-55"><a href="#MouseListener.getMousePosition-55"><span class="linenos">55</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
-</span><span id="MouseListener.getMousePosition-56"><a href="#MouseListener.getMousePosition-56"><span class="linenos">56</span></a>		<span class="sd">&quot;&quot;&quot;</span>
-</span><span id="MouseListener.getMousePosition-57"><a href="#MouseListener.getMousePosition-57"><span class="linenos">57</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
-</span><span id="MouseListener.getMousePosition-58"><a href="#MouseListener.getMousePosition-58"><span class="linenos">58</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
-</span><span id="MouseListener.getMousePosition-59"><a href="#MouseListener.getMousePosition-59"><span class="linenos">59</span></a><span class="sd">		@type: tuple[int, int]</span>
-</span><span id="MouseListener.getMousePosition-60"><a href="#MouseListener.getMousePosition-60"><span class="linenos">60</span></a><span class="sd">		&quot;&quot;&quot;</span>
-</span><span id="MouseListener.getMousePosition-61"><a href="#MouseListener.getMousePosition-61"><span class="linenos">61</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="MouseListener.getMousePosition-58"><a href="#MouseListener.getMousePosition-58"><span class="linenos">58</span></a>	<span class="k">def</span> <span class="nf">getMousePosition</span><span class="p">():</span>
+</span><span id="MouseListener.getMousePosition-59"><a href="#MouseListener.getMousePosition-59"><span class="linenos">59</span></a>		<span class="sd">&quot;&quot;&quot;</span>
+</span><span id="MouseListener.getMousePosition-60"><a href="#MouseListener.getMousePosition-60"><span class="linenos">60</span></a><span class="sd">		This method returns the coordinates of the mouse</span>
+</span><span id="MouseListener.getMousePosition-61"><a href="#MouseListener.getMousePosition-61"><span class="linenos">61</span></a><span class="sd">		@returns: a 2-tuple of the mouse coordinates</span>
+</span><span id="MouseListener.getMousePosition-62"><a href="#MouseListener.getMousePosition-62"><span class="linenos">62</span></a><span class="sd">		@type: tuple[int, int]</span>
+</span><span id="MouseListener.getMousePosition-63"><a href="#MouseListener.getMousePosition-63"><span class="linenos">63</span></a><span class="sd">		&quot;&quot;&quot;</span>
+</span><span id="MouseListener.getMousePosition-64"><a href="#MouseListener.getMousePosition-64"><span class="linenos">64</span></a>		<span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
 </span></pre></div>
 
 
