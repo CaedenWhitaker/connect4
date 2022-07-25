@@ -9,7 +9,7 @@ from connect4.Player import Player
 class ReplayMatch(Match):
 
 	def __init__(self, board: Board, game_info:dict, canvasWidth=700, canvasHeight=700, scale=1):
-		super().__init__(Player("###"), Player("###"), board, canvasWidth, canvasHeight, scale)
+		super().__init__(Player(game_info["p1name"]), Player(game_info["p2name"]), board, canvasWidth, canvasHeight, scale)
 		self.game_menu = GameMenuController(self.scale, can_save_game=False)
 		self.moves = game_info["moves"]
 		self.winner = game_info["winner"]

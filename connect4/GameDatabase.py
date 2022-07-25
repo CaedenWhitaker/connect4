@@ -13,10 +13,10 @@ class GameDatabase:
 
 	def getPlayers(self):
 		self.errors = self.errors or not self.loadPlayers()
-		self.players = [
-			dict(zip(("player","wins","losses","draws"), row))
-			for row in self.players
-		]
+		self.players = {
+            row[0]: dict(zip(("player","wins","losses","draws"), row))
+            for row in self.players
+        }
 		return self.players
 
 	def loadPlayers(self) -> bool:

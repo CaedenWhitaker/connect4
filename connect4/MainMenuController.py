@@ -1,3 +1,4 @@
+from pprint import pprint
 import pygame
 import pygame_menu
 import pygame_menu.locals
@@ -206,34 +207,44 @@ class MainMenuController:
 		kNumberOfMoves = "moves"
 		kWinType = "winner"
 		winner_label_size = self.font.size("Winner: ")
+		records = GameDatabase().getPlayers()
 		
 
 		if info[kPlayer1Type] == "H":
-			p1_name_label = self.font.render("CPU", True, (255,0,0))
+			p1name = info['p1name']
+			p1record = records[p1name]
+			p1_name_label = self.font.render(f"{info[kPlayer1Name]}: {p1record['wins']}-{p1record['losses']}-{p1record['draws']}", True, (255,0,0))
 			p1_type_label = self.font.render("Human", True, (255,0,0))
 		if info[kPlayer1Type] == "C":
+			p1name = info['p1name']
+			p1record = records[p1name]
 			diff = info[kPlayer1Name][-1]
-			p1_name_label = self.font.render("CPU", True, (255,0,0))
+			p1_name_label = self.font.render(f"{info[kPlayer1Name]}: {p1record['wins']}-{p1record['losses']}-{p1record['draws']}", True, (255,0,0))
 			p1_type_label = self.font.render("Computer: " + diff, True, (255,0,0))
 		
 		
 		if info[kPlayer2Type] == "H":
-			p2_name_label = self.font.render(info[kPlayer2Name], True, (0,0,255))
+			p2name = info['p2name']
+			p2record = records[p2name]
+			p2_name_label = self.font.render(f"{info[kPlayer2Name]}: {p2record['wins']}-{p2record['losses']}-{p2record['draws']}", True, (0,0,255))
 			p2_type_label = self.font.render("Human", True, (0,0,255))
 		if info[kPlayer2Type] == "C":
+			p2name = info['p2name']
+			p2record = records[p2name]
 			diff = info[kPlayer2Name][-1]
-			p2_name_label = self.font.render(info[kPlayer2Name][:-1] + "2", True, (0,0,255))
+			p2_name_label = self.font.render(f"{info[kPlayer2Name]}: {p2record['wins']}-{p2record['losses']}-{p2record['draws']}", True, (0,0,255))
 			p2_type_label = self.font.render("Computer: " + diff, True, (0,0,255))
 		
 		moves_label = self.font.render(str(len(info[kNumberOfMoves])), True, (255,255,255))
 		if info[kWinType] == 0:
 			winner_label = self.font.render("Unfinished", True, (255,255,255))
 		if info[kWinType] == 1:
-			winner_label = p1_name_label
+			winner_label = self.font.render(f"{info[kPlayer1Name]}", True, (255,0,0))
 		if info[kWinType] == 2:
-			winner_label = p2_name_label
+			winner_label = self.font.render(f"{info[kPlayer2Name]}", True, (0,0,255))
 		if info[kWinType] == 3:
 			winner_label = self.font.render("Tie", True, (255,255,255))
+
 		
 		start_y = 100 
 		self.info_surf.blit(p1_name_label, (self.x1, start_y * self.scale))
