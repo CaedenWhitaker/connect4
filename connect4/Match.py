@@ -125,8 +125,7 @@ class Match(VisualElement, MouseListener):
 		else:
 			col = self.player1.getNextMove(self.board)
 		
-		if col is not None:
-			self.board.move(col, self.turn)
+		if col is not None and self.board.move(col, self.turn):
 			win = self.board.checkWin(self.turn)
 			self.turn = not self.turn
 			if win != 0:
