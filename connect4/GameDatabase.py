@@ -1,4 +1,4 @@
-#from connect4.Match import Match
+from connect4.Match import Match
 import sqlite3
 
 
@@ -60,7 +60,7 @@ class GameDatabase:
 			if connection is not None:
 				connection.close()
 
-	def save(self, match) -> bool:
+	def save(self, match: Match) -> bool:
 		player1WinsDelta = int(match.winner == 1)
 		player1LossesDelta = int(match.winner == 2)
 		player1DrawsDelta = int(match.winner == 3)

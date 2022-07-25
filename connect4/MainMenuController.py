@@ -1,4 +1,3 @@
-from pprint import pprint
 import pygame
 import pygame_menu
 import pygame_menu.locals
