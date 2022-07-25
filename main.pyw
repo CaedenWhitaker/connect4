@@ -10,6 +10,7 @@ from connect4.MainMenuController import MainMenuController
 
 
 def main():
+	"Connect 4 Simulator entry point"
 	if hasattr(ctypes, "windll"):
 		ctypes.windll.user32.SetProcessDPIAware()
 		currMaxY = ctypes.windll.user32.GetSystemMetrics(1)

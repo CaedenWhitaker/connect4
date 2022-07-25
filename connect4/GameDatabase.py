@@ -1,9 +1,11 @@
-from connect4.Match import Match
+# an unfortunate circular import
+# from connect4.Match import Match
 import sqlite3
 
 
 class GameDatabase:
 	def __init__(self, path="connect4.db") -> None:
+		"constructor"
 		self.path = path
 		self.safe = self.create() is not None
 		self.errors = False
@@ -12,6 +14,7 @@ class GameDatabase:
 		self.moves = []
 
 	def getPlayers(self):
+		"returns a diction of player records"
 		self.errors = self.errors or not self.loadPlayers()
 		self.players = {
             row[0]: dict(zip(("player","wins","losses","draws"), row))
@@ -20,6 +23,7 @@ class GameDatabase:
 		return self.players
 
 	def loadPlayers(self) -> bool:
+		"loads player records from database"
 		try:
 			connection = sqlite3.connect(self.path)
 			self.players = connection.execute(
@@ -35,6 +39,7 @@ class GameDatabase:
 				connection.close()
 	
 	def getMatches(self):
+		"returns a dictionary of match records"
 		self.errors = self.errors or not self.loadMatches()
 		self.matches = [
 			dict(zip(("start","end","p1name","p2name","p1type","p2type","winner","moves"), row))
@@ -46,6 +51,7 @@ class GameDatabase:
 		return self.matches
 
 	def loadMatches(self) -> bool:
+		"loads match records from database"
 		try:
 			connection = sqlite3.connect(self.path)
 			self.matches = connection.execute(
@@ -60,7 +66,8 @@ class GameDatabase:
 			if connection is not None:
 				connection.close()
 
-	def save(self, match: Match) -> bool:
+	def save(self, match) -> bool:
+		"saves a match object to the database by updating the tables"
 		player1WinsDelta = int(match.winner == 1)
 		player1LossesDelta = int(match.winner == 2)
 		player1DrawsDelta = int(match.winner == 3)
@@ -215,6 +222,7 @@ class GameDatabase:
 				connection.close()
 
 	def create(self) -> bool:
+		"creates the database file and schema if it doesn't already exist"
 		connection = None
 		try:
 			connection = sqlite3.connect(self.path)

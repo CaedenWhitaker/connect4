@@ -3,6 +3,7 @@ from connect4.Board import Board
 class Player:
 
 	def __init__(self, name):
+		"constructor"
 		self.name = name
 		self.turn = None
 		self.order = None
